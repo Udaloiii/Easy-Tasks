@@ -6,12 +6,17 @@ export type TodolistsFromBack = {
   title: string
 }
 
+type FieldErrorType = {
+  error: string
+  field: string
+}
+
 // main type of response
 export type ResponseType<T = {}> = {
   data: T
   resultCode: number
-  messages: []
-  fieldsErrors: []
+  messages: string[]
+  fieldsErrors: FieldErrorType[]
 }
 
 // type of task from the backend

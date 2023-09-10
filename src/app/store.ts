@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
+import { appReducer } from 'app/app-reducer.ts'
+
 export const store = configureStore({
   reducer: {
     // tasks: tasksReducer,
     // todolists: todolistsReducer,
-    // app: appReducer,
+    app: appReducer,
     // auth: authSlice,
   },
 })

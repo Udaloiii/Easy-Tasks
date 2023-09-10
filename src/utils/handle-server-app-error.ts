@@ -1,6 +1,6 @@
-import { Dispatch } from '@reduxjs/toolkit' // в оригинале импорт из redux
-import { appActions } from 'app/app.reducer' // пофиксить
+import { Dispatch } from 'redux'
 
+import { appActions } from 'app/app-reducer'
 import { ResponseType } from 'common/api'
 
 export const handleServerAppError = <D>(

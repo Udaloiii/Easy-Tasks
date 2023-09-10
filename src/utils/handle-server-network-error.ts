@@ -1,6 +1,6 @@
-import { appActions } from 'app/app.reducer' // пофиксить
 import axios from 'axios'
 
+import { appActions } from 'app/app-reducer.ts'
 import { AppDispatch } from 'app/store'
 
 export const handleServerNetworkError = (err: unknown, dispatch: AppDispatch): void => {
