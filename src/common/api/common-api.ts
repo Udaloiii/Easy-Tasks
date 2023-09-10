@@ -5,7 +5,7 @@ import {
   TasksFromBack,
   TasksResponse,
   TodolistsFromBack,
-} from '@/common/api/types-for-response-api.ts'
+} from 'common/api/types-for-response-api.ts'
 
 export const instance = axios.create({
   baseURL: 'https://social-network.samuraijs.com/api/1.1/',
