@@ -26,7 +26,12 @@ a:hover {
 }
 
 body {
+  min-height: 100vh;
   margin: 0;
+
+  /* my styles */
+  background-image: url('assets/image/laminat.png');
+  background-repeat: repeat;
 }
 
 h1 {
