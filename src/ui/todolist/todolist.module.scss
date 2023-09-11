@@ -1,0 +1,107 @@
+.mainBlock {
+  width: 30%;
+  height: max-content;
+  margin: 35px 20px;
+
+  border: 1px solid grey;
+  border-radius: 10px;
+  box-shadow: 15px 15px 8px 0 rgb(94 93 93);
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+
+  font-family: Cambria, sans-serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+.buttonsBlock {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  margin: 10px auto;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30%;
+  height: 35px;
+  padding: 10px;
+
+  font-size: 1rem;
+
+  border: none;
+  outline: 0;
+
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: #747bff;
+    transition: 0.5s;
+  }
+
+  &:active {
+    transform: scale(0.9);
+    background-color: #9194ef;
+  }
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
+}
+
+@media screen and (width <= 1320px) {
+  .mainBlock {
+    width: 40%;
+  }
+
+  .button {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (width <= 920px) {
+  .mainBlock {
+    width: 40%;
+  }
+
+  .button {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (width <= 750px) {
+  .mainBlock {
+    width: 70%;
+  }
+
+  .button {
+    width: 30%;
+    height: 25px;
+    margin: 2px;
+
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+@media screen and (width <= 660px) {
+  .mainBlock {
+    width: 80%;
+  }
+
+  .buttonsBlock {
+    flex-direction: row;
+  }
+}
