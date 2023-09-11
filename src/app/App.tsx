@@ -10,7 +10,6 @@ export function App() {
       <Todolist />
       <Todolist />
       <Todolist />
-      <Todolist />
     </div>
   )
 }
