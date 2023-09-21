@@ -3,9 +3,18 @@
   height: max-content;
   margin: 35px 20px;
 
-  border: 1px solid grey;
+  // border: 1px solid grey;
   border-radius: 10px;
-  box-shadow: 15px 15px 8px 0 rgb(94 93 93);
+
+  // box-shadow: 15px 15px 8px 0 rgb(94 93 93);
+  box-shadow: 1px 2px 8px 5px rgb(94 93 93 / 80%);
+
+  transition: 0.3s;
+
+  &:hover {
+    box-shadow: 1px 2px 8px 8px rgb(94 93 93 / 100%);
+    transition: 0.3s;
+  }
 }
 
 .title {
