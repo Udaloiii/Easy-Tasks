@@ -38,6 +38,12 @@
   border-radius: 5px;
 }
 
+.isDone {
+  transform: scale(0.9);
+  opacity: 0.4;
+  transition: 0.3s;
+}
+
 @media screen and (width <= 920px) {
   .text {
     font-size: 1rem;

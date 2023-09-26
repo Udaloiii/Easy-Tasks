@@ -1,6 +1,8 @@
 import s from './task.module.scss'
 
 const Task = () => {
+  // const isDoneStyle = isDone ? style.isDone : ''  // потом добавить в проект, чтобы сделанные таски выделялись (класс уже добавил)
+
   return (
     <div className={s.mainBlock}>
       <input className={s.input} type="checkbox" />
