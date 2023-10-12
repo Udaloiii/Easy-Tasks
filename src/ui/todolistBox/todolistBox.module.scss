@@ -1,0 +1,29 @@
+.wrapper {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  justify-content: center;
+}
+
+@media screen and (width <= 1200px) {
+  .wrapper {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+}
+
+@media screen and (width <= 768px) {
+  .wrapper {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+}
+
+@media screen and (width <= 500px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-bottom: 25px;
+  }
+}
