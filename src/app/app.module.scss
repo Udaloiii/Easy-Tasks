@@ -1,12 +1,11 @@
 .mainBlock {
   display: flex;
   flex-wrap: wrap;
+  gap: 40px;
 
   // justify-content: center;
-
-  width: 95%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 0;
 }
 
 @media screen and (width <= 750px) {

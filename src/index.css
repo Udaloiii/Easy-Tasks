@@ -6,12 +6,10 @@
   text-size-adjust: 100%;
   text-rendering: optimizelegibility;
 
-  color-scheme: light dark;
-  background-color: #242424;
+  border: none;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   font-synthesis: none;
 }
 
@@ -26,6 +24,7 @@ a:hover {
 }
 
 body {
+  width: 100vw;
   min-height: 100vh;
   margin: 0;
 
@@ -34,10 +33,13 @@ body {
   background-repeat: repeat;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+/* h1 { */
+
+/*  font-size: 3.2em; */
+
+/*  line-height: 1.1; */
+
+/* } */
 
 button {
   cursor: pointer;
@@ -67,7 +69,6 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #fff;
   }
 
   a:hover {
