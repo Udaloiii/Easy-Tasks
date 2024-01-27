@@ -36,7 +36,7 @@ export const EditableSpan: FC<EditableSpanPropsType> = ({
           autofocus
           onBlurClick={onChangeTitleHandler}
           onChange={setNewText}
-          padding={'2px 4px'}
+          padding={'2px 6px'}
           value={newText}
         />
       ) : (
@@ -55,14 +55,12 @@ export const EditableSpan: FC<EditableSpanPropsType> = ({
 }
 
 const Wrap = styled.span`
+  width: 100%;
   padding: 20px 0 20px;
   display: flex;
   gap: 5px;
   justify-content: center;
 
-  input {
-    width: 100%;
-  }
   button {
     padding-top: 7px;
   }
