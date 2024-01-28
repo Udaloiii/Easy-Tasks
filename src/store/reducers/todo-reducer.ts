@@ -1,4 +1,5 @@
-import { ResponseGetTodosType } from '@/api/todos-api'
+import { ResponseGetTodosType, todosApi } from '@/api/todos-api'
+import { Dispatch } from 'redux'
 
 export type FilterValuesType = 'active' | 'all' | 'completed'
 export type TodolistType = {
@@ -20,7 +21,7 @@ export const todoReducer = (state = initialState, action: ActionType): TodolistT
     }
 
     case 'ADD-TODO': {
-      return [action.todo, ...state]
+      return [{ ...action.todo, filter: 'all' }, ...state]
     }
 
     case 'DELETE-TODO': {
@@ -44,7 +45,7 @@ export const todoReducer = (state = initialState, action: ActionType): TodolistT
 export const setTodosAC = (todolists: ResponseGetTodosType[]) => {
   return { todolists, type: 'SET-TODOS' } as const
 }
-export const addTodoAC = (title: string, todo: TodolistType) => {
+export const addTodoAC = (title: string, todo: ResponseGetTodosType) => {
   return { title, todo, type: 'ADD-TODO' } as const
 }
 
@@ -58,4 +59,41 @@ export const changeTodoTitleAC = (todoId: string, newTitle: string) => {
 
 export const changeTodoFilterAC = (todoId: string, newValue: FilterValuesType) => {
   return { newValue, todoId, type: 'CHANGE-TODO-FILTER' } as const
+}
+
+// THUNKS
+
+export const setTodoTC = () => (dispatch: Dispatch) => {
+  todosApi
+    .getTodo()
+    .then(res => {
+      dispatch(setTodosAC(res.data))
+    })
+    .catch(err => console.warn(err))
+}
+export const addTodoTC = (title: string) => (dispatch: Dispatch) => {
+  todosApi
+    .addTodo(title)
+    .then(res => {
+      dispatch(addTodoAC(title, res.data.data.item))
+    })
+    .catch(err => console.warn(err))
+}
+
+export const deleteTodoTC = (todoId: string) => (dispatch: Dispatch) => {
+  todosApi
+    .deleteTodo(todoId)
+    .then(() => {
+      dispatch(deleteTodoAC(todoId))
+    })
+    .catch(err => console.warn(err))
+}
+
+export const updateTodoTitleTC = (todoId: string, newTitle: string) => (dispatch: Dispatch) => {
+  todosApi
+    .changeTodoTitle(todoId, newTitle)
+    .then(() => {
+      dispatch(changeTodoTitleAC(todoId, newTitle))
+    })
+    .catch(err => console.warn(err))
 }
