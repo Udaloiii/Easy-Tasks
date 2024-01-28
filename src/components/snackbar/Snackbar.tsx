@@ -16,7 +16,7 @@ export const Snackbar: FC<SnackbarPropsType> = ({ sendSuccess, text }: SnackbarP
   }
 
   const transition = {
-    duration: 0.3,
+    duration: 0.2,
     y: { stiffness: 1000, velocity: -100 },
   }
 
@@ -44,8 +44,8 @@ const SendInfo = styled(motion.div)`
   right: -50%;
   width: max-content;
   border: 1px solid royalblue;
-  background-color: rgba(24, 24, 24, 0.9);
-  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(24, 24, 24, 0.95);
+  color: rgb(199, 199, 199);
   border-radius: 6px;
   padding: 20px;
   margin: 0 auto;
