@@ -10,7 +10,7 @@ export type TaskResponseType = {
   order: number
   priority: number
   startDate: string
-  status: number
+  status: TaskStatuses
   title: string
   todoListId: string
 }
@@ -21,14 +21,21 @@ type ResponseGetTaskType = {
 }
 
 // тип для отправки таски на сервер для обновления
-type RequestTaskUpdateType = {
-  completed: boolean
-  deadline: string
-  description: string
-  priority: number
-  startDate: string
-  status: number
-  title: string
+export type RequestTaskUpdateType = {
+  completed?: boolean
+  deadline?: string
+  description?: string
+  priority?: number
+  startDate?: string
+  status?: TaskStatuses
+  title?: string
+}
+
+export enum TaskStatuses {
+  Completed = 2,
+  Draft = 3,
+  InProgress = 1,
+  New = 0,
 }
 export const tasksApi = {
   addTask(todoId: string, title: string) {
