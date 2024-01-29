@@ -6,10 +6,12 @@ import { CustomInput } from '@/components/customInput/CustomInput'
 import styled from 'styled-components'
 
 type EditableSpanPropsType = {
+  isDone?: boolean
   onClick?: (newText: string) => void
   text: string
 }
 export const EditableSpan: FC<EditableSpanPropsType> = ({
+  isDone,
   onClick,
   text,
 }: EditableSpanPropsType) => {
@@ -17,7 +19,7 @@ export const EditableSpan: FC<EditableSpanPropsType> = ({
   const [newText, setNewText] = useState(text)
 
   const onChangeTitleHandler = (newText: string) => {
-    if (newText.trim() !== '') {
+    if (newText.trim() !== '' && newText.trim() !== text) {
       onClick?.(newText)
       setNewText(newText)
       setChangeable(false)
@@ -42,12 +44,14 @@ export const EditableSpan: FC<EditableSpanPropsType> = ({
       ) : (
         <>
           {newText}
-          <CustomButton
-            heightIcon={'15px'}
-            iconId={'change'}
-            onClick={conditionHandler}
-            widthIcon={'15px'}
-          />
+          {!isDone && (
+            <CustomButton
+              heightIcon={'15px'}
+              iconId={'change'}
+              onClick={conditionHandler}
+              widthIcon={'15px'}
+            />
+          )}
         </>
       )}
     </Wrap>
@@ -56,7 +60,7 @@ export const EditableSpan: FC<EditableSpanPropsType> = ({
 
 const Wrap = styled.span`
   width: 100%;
-  padding: 20px 0 20px;
+  //padding: 20px 0 20px;
   display: flex;
   gap: 5px;
   justify-content: center;
