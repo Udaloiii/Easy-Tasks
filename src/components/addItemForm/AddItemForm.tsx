@@ -1,28 +1,30 @@
 import { FC, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { CustomInput } from '@/components/customInput/CustomInput'
 import { Snackbar } from '@/components/snackbar/Snackbar'
-import { FilterValuesType, addTodoAC } from '@/store/reducers/todo-reducer'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
 
-export const AddItemForm: FC = () => {
+type AddItemFormPropsType = {
+  onClick?: (title: string) => void
+  padding?: string
+  placeholder?: string
+  textForSnackbar?: string
+  width?: string
+}
+export const AddItemForm: FC<AddItemFormPropsType> = ({
+  onClick,
+  padding,
+  placeholder,
+  textForSnackbar,
+  width,
+}: AddItemFormPropsType) => {
   const [value, setValue] = useState('')
   const [success, setSuccess] = useState(false)
-  const dispatch = useDispatch()
-  const addTodoHandler = () => {
+  const addItemHandler = () => {
     if (value.trim() !== '') {
-      const todo = {
-        addedDate: 'now',
-        filter: 'all' as FilterValuesType,
-        id: 'asd-qwe-qw-asd-asd',
-        order: 85,
-        title: value,
-      }
-
-      dispatch(addTodoAC(value, todo))
+      onClick?.(value)
       setValue('')
       setSuccess(true)
     }
@@ -37,22 +39,30 @@ export const AddItemForm: FC = () => {
   }, [success])
 
   return (
-    <Wrap>
-      <CustomInput onChange={setValue} placeholder={'create you todolist'} value={value} />
+    <Wrap width={width}>
+      <CustomInput
+        onChange={setValue}
+        onEnterPress={addItemHandler}
+        padding={padding}
+        placeholder={placeholder}
+        value={value}
+      />
       <CustomButton
         color={'royalblue'}
         heightIcon={'35px'}
         iconId={'add'}
-        onClick={addTodoHandler}
+        onClick={addItemHandler}
         viewBoxForIcon={'0 0 20 20'}
         widthIcon={'35px'}
       />
-      <Snackbar sendSuccess={success} text={'todo is added'} />
+      <Snackbar sendSuccess={success} text={textForSnackbar} />
     </Wrap>
   )
 }
 
-const Wrap = styled.div`
+const Wrap = styled.div<{ width?: string }>`
+  width: ${props => props.width || '100%'};
   display: flex;
   gap: 20px;
+  justify-content: center;
 `
