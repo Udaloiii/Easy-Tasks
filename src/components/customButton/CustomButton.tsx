@@ -54,8 +54,8 @@ const StyleButton = styled.button<{ color?: string }>`
     svg {
       transform: scale(0.9);
       transition: 0.2s;
-      box-shadow: ${props => (props.color ? '' : '0 0 10px 5px royalblue')};
-      border-radius: 50%;
+      box-shadow: ${props => (props.color ? '' : '0 0 10px 2px royalblue')};
+      border-radius: 20%;
     }
   }
 `
