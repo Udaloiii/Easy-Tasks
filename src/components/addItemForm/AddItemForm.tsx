@@ -1,8 +1,7 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { CustomInput } from '@/components/customInput/CustomInput'
-import { Snackbar } from '@/components/snackbar/Snackbar'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
 
@@ -10,41 +9,38 @@ type AddItemFormPropsType = {
   onClick?: (title: string) => void
   padding?: string
   placeholder?: string
-  textForSnackbar?: string
   width?: string
 }
 export const AddItemForm: FC<AddItemFormPropsType> = ({
   onClick,
   padding,
   placeholder,
-  textForSnackbar,
   width,
 }: AddItemFormPropsType) => {
+  const [error, setError] = useState<null | string>(null)
   const [value, setValue] = useState('')
-  const [success, setSuccess] = useState(false)
   const addItemHandler = () => {
+    setError(null)
     if (value.trim() !== '') {
       onClick?.(value)
       setValue('')
-      setSuccess(true)
+    } else {
+      setError('Title is required')
+      const clearId = setTimeout(() => setError(null), 5000)
+
+      return () => clearInterval(clearId)
     }
   }
-
-  useEffect(() => {
-    if (success) {
-      setTimeout(() => {
-        setSuccess(false)
-      }, 4000)
-    }
-  }, [success])
 
   return (
     <Wrap width={width}>
       <CustomInput
+        error={error}
         onChange={setValue}
         onEnterPress={addItemHandler}
         padding={padding}
         placeholder={placeholder}
+        setError={setError}
         value={value}
       />
       <CustomButton
@@ -55,7 +51,6 @@ export const AddItemForm: FC<AddItemFormPropsType> = ({
         viewBoxForIcon={'0 0 20 20'}
         widthIcon={'35px'}
       />
-      <Snackbar sendSuccess={success} text={textForSnackbar} />
     </Wrap>
   )
 }
