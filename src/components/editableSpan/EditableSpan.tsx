@@ -2,6 +2,7 @@ import { FC, useState } from 'react'
 
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { CustomInput } from '@/components/customInput/CustomInput'
+import { AnimatePresence } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
 
@@ -44,14 +45,16 @@ export const EditableSpan: FC<EditableSpanPropsType> = ({
       ) : (
         <>
           {newText}
-          {!isDone && (
-            <CustomButton
-              heightIcon={'15px'}
-              iconId={'change'}
-              onClick={conditionHandler}
-              widthIcon={'15px'}
-            />
-          )}
+          <AnimatePresence>
+            {!isDone && (
+              <CustomButton
+                heightIcon={'15px'}
+                iconId={'change'}
+                onClick={conditionHandler}
+                widthIcon={'15px'}
+              />
+            )}
+          </AnimatePresence>
         </>
       )}
     </Wrap>
