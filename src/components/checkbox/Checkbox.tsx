@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, FC } from 'react'
 
 import { TaskStatuses } from '@/api/tasks-api'
 // eslint-disable-next-line import/no-named-as-default
@@ -6,9 +6,10 @@ import styled from 'styled-components'
 
 type CheckboxType = {
   checked: boolean
+  id?: string
   onChange: (value: TaskStatuses) => void
 }
-export const Checkbox = ({ checked, onChange }: CheckboxType) => {
+export const Checkbox: FC<CheckboxType> = ({ checked, id, onChange }: CheckboxType) => {
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const checked = e.currentTarget.checked
 
@@ -17,7 +18,7 @@ export const Checkbox = ({ checked, onChange }: CheckboxType) => {
 
   return (
     <Wrapper>
-      <StyledInput checked={checked} onChange={onChangeHandler} type={'checkbox'} />
+      <StyledInput checked={checked} id={id} onChange={onChangeHandler} type={'checkbox'} />
       <svg viewBox={'0 0 64 64'}>
         <path
           d={
