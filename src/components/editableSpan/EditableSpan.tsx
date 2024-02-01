@@ -21,8 +21,8 @@ export const EditableSpan: FC<EditableSpanPropsType> = ({
 
   const onChangeTitleHandler = (newText: string) => {
     if (newText.trim() !== '' && newText.trim() !== text) {
-      onClick?.(newText)
-      setNewText(newText)
+      onClick?.(newText.trim())
+      setNewText(newText.trim())
       setChangeable(false)
     } else {
       setNewText(text)
