@@ -1,4 +1,5 @@
 import { RequestTaskUpdateType, TaskResponseType, tasksApi } from '@/api/tasks-api'
+import { setAppErrorAC, setAppInfoAC, setAppStatusAC } from '@/store/reducers/app-reducer'
 import { addTodoAC, setTodosAC } from '@/store/reducers/todo-reducer'
 import { AppMainType } from '@/store/store'
 import { Dispatch } from 'redux'
@@ -85,25 +86,40 @@ export const updateTaskAC = (todoId: string, taskId: string, task: RequestTaskUp
 // THUNKS
 
 export const setTasksTC = (todoId: string) => (dispatch: Dispatch) => {
+  dispatch(setAppStatusAC('loading'))
+  dispatch(setAppErrorAC(null))
   tasksApi
     .getTasks(todoId)
     .then(res => {
+      dispatch(setAppStatusAC('succeeded'))
       dispatch(setTasksAC(todoId, res.data.items))
     })
-    .catch(err => console.warn(err))
+    .catch(err => {
+      dispatch(setAppStatusAC('failed'))
+      dispatch(setAppErrorAC(err.message))
+    })
 }
 export const addTaskTC = (todoId: string, title: string) => (dispatch: Dispatch) => {
+  dispatch(setAppStatusAC('loading'))
+  dispatch(setAppErrorAC(null))
   tasksApi
     .addTask(todoId, title)
     .then(res => {
+      dispatch(setAppStatusAC('succeeded'))
       dispatch(addTaskAC(todoId, res.data.data.item))
+      dispatch(setAppInfoAC('task is added'))
     })
-    .catch(err => console.warn(err))
+    .catch(err => {
+      dispatch(setAppStatusAC('failed'))
+      dispatch(setAppErrorAC(err.message))
+    })
 }
 
 export const updateTaskTC =
   (todolistId: string, taskId: string, domainModel: RequestTaskUpdateType) =>
   (dispatch: Dispatch, getState: () => AppMainType) => {
+    dispatch(setAppStatusAC('loading'))
+    dispatch(setAppErrorAC(null))
     const state = getState()
     const task = state.task[todolistId].find(t => t.id === taskId)
 
@@ -126,20 +142,28 @@ export const updateTaskTC =
     tasksApi
       .updateTask(todolistId, taskId, apiModel)
       .then(() => {
+        dispatch(setAppStatusAC('succeeded'))
         dispatch(updateTaskAC(todolistId, taskId, domainModel))
+        dispatch(setAppInfoAC('task is updated'))
       })
       .catch(err => {
-        console.warn(err)
+        dispatch(setAppStatusAC('failed'))
+        dispatch(setAppErrorAC(err.message))
       })
   }
 
 export const deleteTaskTC = (todoId: string, taskId: string) => (dispatch: Dispatch) => {
+  dispatch(setAppStatusAC('loading'))
+  dispatch(setAppErrorAC(null))
   tasksApi
     .deleteTask(todoId, taskId)
     .then(() => {
+      dispatch(setAppStatusAC('succeeded'))
       dispatch(deleteTaskAC(todoId, taskId))
+      dispatch(setAppInfoAC('task is deleted'))
     })
     .catch(err => {
-      console.warn(err)
+      dispatch(setAppStatusAC('failed'))
+      dispatch(setAppErrorAC(err.message))
     })
 }

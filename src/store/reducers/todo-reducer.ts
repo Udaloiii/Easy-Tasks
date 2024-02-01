@@ -1,4 +1,5 @@
 import { ResponseGetTodosType, todosApi } from '@/api/todos-api'
+import { setAppErrorAC, setAppInfoAC, setAppStatusAC } from '@/store/reducers/app-reducer'
 import { Dispatch } from 'redux'
 
 export type FilterValuesType = 'active' | 'all' | 'completed'
@@ -64,36 +65,68 @@ export const changeTodoFilterAC = (todoId: string, newValue: FilterValuesType) =
 // THUNKS
 
 export const setTodoTC = () => (dispatch: Dispatch) => {
+  dispatch(setAppErrorAC(null))
+  dispatch(setAppStatusAC('loading'))
   todosApi
     .getTodo()
     .then(res => {
+      dispatch(setAppStatusAC('succeeded'))
       dispatch(setTodosAC(res.data))
     })
-    .catch(err => console.warn(err))
+    .catch(err => {
+      dispatch(setAppStatusAC('failed'))
+      dispatch(setAppErrorAC(err.message))
+    })
 }
 export const addTodoTC = (title: string) => (dispatch: Dispatch) => {
+  dispatch(setAppStatusAC('loading'))
+  dispatch(setAppErrorAC(null))
   todosApi
     .addTodo(title)
     .then(res => {
-      dispatch(addTodoAC(title, res.data.data.item))
+      if (res.data.resultCode === 0) {
+        dispatch(setAppStatusAC('succeeded'))
+        dispatch(addTodoAC(title, res.data.data.item))
+        dispatch(setAppInfoAC('todo is added'))
+      } else {
+        dispatch(setAppErrorAC(res.data.messages[0]))
+        dispatch(setAppStatusAC('succeeded'))
+      }
     })
-    .catch(err => console.warn(err))
+    .catch(err => {
+      dispatch(setAppStatusAC('failed'))
+      dispatch(setAppErrorAC(err.message))
+    })
 }
 
 export const deleteTodoTC = (todoId: string) => (dispatch: Dispatch) => {
+  dispatch(setAppStatusAC('loading'))
+  dispatch(setAppErrorAC(null))
   todosApi
     .deleteTodo(todoId)
     .then(() => {
+      dispatch(setAppStatusAC('succeeded'))
       dispatch(deleteTodoAC(todoId))
+      dispatch(setAppInfoAC('todo is deleted'))
     })
-    .catch(err => console.warn(err))
+    .catch(err => {
+      dispatch(setAppStatusAC('failed'))
+      dispatch(setAppErrorAC(err.message))
+    })
 }
 
 export const updateTodoTitleTC = (todoId: string, newTitle: string) => (dispatch: Dispatch) => {
+  dispatch(setAppStatusAC('loading'))
+  dispatch(setAppErrorAC(null))
   todosApi
     .changeTodoTitle(todoId, newTitle)
     .then(() => {
+      dispatch(setAppStatusAC('succeeded'))
       dispatch(changeTodoTitleAC(todoId, newTitle))
+      dispatch(setAppInfoAC('title is updated'))
     })
-    .catch(err => console.warn(err))
+    .catch(err => {
+      dispatch(setAppStatusAC('failed'))
+      dispatch(setAppErrorAC(err.message))
+    })
 }
