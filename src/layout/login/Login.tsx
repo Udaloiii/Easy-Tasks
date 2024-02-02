@@ -19,7 +19,7 @@ export const Login: FC = () => {
           <Checkbox checked={remember} id={'remember'} onChange={setRememberHandler} />
           <StyleRemember htmlFor={'remember'}>Remember me</StyleRemember>
         </WrapCheckbox>
-        <CustomButton iconId={'add'} type={'submit'} />
+        <CustomButton iconId={'login'} title={'login'} type={'submit'} />
         <Text>Don`t have an account? Use a free:</Text>
         <WrapCheckbox>
           <span>
@@ -42,9 +42,13 @@ const StyleLogin = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  input {
+    height: 30px;
+  }
 `
 const Wrap = styled.form`
-  padding: 20px;
+  padding: 40px 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
