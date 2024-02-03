@@ -1,6 +1,7 @@
 import { FC } from 'react'
 
 import { Icon } from '@/components/icon/Icon'
+import { motion } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
 
@@ -10,6 +11,7 @@ type ButtonPropsType = {
   iconId: string
   onClick?: () => void
   title?: string
+  type?: 'button' | 'reset' | 'submit'
   viewBoxForIcon?: string
   widthIcon?: string
 }
@@ -18,17 +20,28 @@ export const CustomButton: FC<ButtonPropsType> = ({
   heightIcon,
   iconId,
   onClick,
+  title,
+  type,
   viewBoxForIcon,
   widthIcon,
 }: ButtonPropsType) => {
   return (
-    <StyleButton color={color} onClick={onClick}>
+    <StyleButton
+      animate={{ opacity: 1 }}
+      color={color}
+      exit={{ opacity: 0, transition: { duration: 0.3 } }}
+      initial={{ opacity: 0 }}
+      onClick={onClick}
+      transition={{ duration: 0.5 }}
+      type={type || 'button'}
+    >
+      {title && <Title>{title}</Title>}
       <Icon height={heightIcon} iconId={iconId} viewBox={viewBoxForIcon} width={widthIcon} />
     </StyleButton>
   )
 }
 
-const StyleButton = styled.button<{ color?: string }>`
+const StyleButton = styled(motion.button)<{ color?: string }>`
   background-color: transparent;
   border: none;
   outline: none;
@@ -38,24 +51,25 @@ const StyleButton = styled.button<{ color?: string }>`
   color: ${props => props.color || 'white'};
   cursor: pointer;
   transition: 0.3s;
-
+  padding: 0;
+  gap: 5px;
   svg {
     transition: 0.3s;
   }
 
   &:hover {
-    svg {
-      transform: scale(1.1);
-      transition: 0.2s;
-    }
+    transform: scale(1.1);
+    transition: 0.2s ease-in-out;
   }
 
   &:active {
-    svg {
-      transform: scale(0.9);
-      transition: 0.2s;
-      box-shadow: ${props => (props.color ? '' : '0 0 10px 2px royalblue')};
-      border-radius: 20%;
-    }
+    transform: scale(1);
+    transition: 0.2s ease-in-out;
+    box-shadow: ${props => (props.color ? '' : '0 0 10px 2px royalblue')};
+    border-radius: 20%;
   }
+`
+const Title = styled.span`
+  align-self: center;
+  font-family: 'Bahnschrift', sans-serif;
 `
