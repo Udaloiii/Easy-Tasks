@@ -36,8 +36,8 @@ export const AddItemForm: FC<AddItemFormPropsType> = ({
     <Wrap width={width}>
       <CustomInput
         error={error}
-        onChange={setValue}
         onEnterPress={addItemHandler}
+        onchange={setValue}
         padding={padding}
         placeholder={placeholder}
         setError={setError}
