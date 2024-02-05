@@ -1,6 +1,6 @@
 import { MainResponseType, instance } from '@/api/main-instance-api'
 
-type RequestLogInType = {
+export type RequestLogInType = {
   captcha?: boolean
   email: string
   password: string
