@@ -6,6 +6,7 @@ import { CustomButton } from '@/components/customButton/CustomButton'
 import { EditableSpan } from '@/components/editableSpan/EditableSpan'
 import { deleteTaskTC, updateTaskTC } from '@/store/reducers/task-reducer'
 import { useAppDispatch } from '@/store/store'
+import { motion } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
 
@@ -26,21 +27,29 @@ export const Task: FC<TaskPropsType> = ({ id, isDone, title, todoId }: TaskProps
   const removeTask = () => dispatch(deleteTaskTC(todoId, id))
 
   return (
-    <Container>
-      <Checkbox checked={isDone} onChange={updateTaskStatus} />
+    <Container
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }}
+      layout
+      transition={{
+        delay: 0.1,
+        duration: 0.3,
+      }}
+    >
+      <Checkbox checked={isDone} onchange={updateTaskStatus} />
       <Text isDone={isDone}>
-        <EditableSpan onClick={changeTaskTitle} text={title} />
+        <EditableSpan isDone={isDone} onClick={changeTaskTitle} text={title} />
       </Text>
-      <CustomButton heightIcon={'30px'} iconId={'delete'} onClick={removeTask} widthIcon={'30px'} />
+      <CustomButton heightIcon={'25px'} iconId={'delete'} onClick={removeTask} widthIcon={'25px'} />
     </Container>
   )
 }
 
-const Container = styled.div`
-  padding: 0 10px;
+const Container = styled(motion.div)`
   width: 100%;
   display: flex;
-  gap: 15px;
+  gap: 20px;
   align-items: center;
 
   button {
@@ -49,11 +58,12 @@ const Container = styled.div`
 `
 const Text = styled.p<{ isDone: boolean }>`
   max-width: 100%;
-  color: whitesmoke;
+  color: ${props => (props.isDone ? 'grey' : 'whitesmoke')};
   font-size: 1.2rem;
   filter: ${props => (props.isDone ? 'blur(1px)' : '')};
   transform: ${props => (props.isDone ? 'scale(0.9)' : '')};
   transition: 0.5s;
+  user-select: ${props => (props.isDone ? 'none' : '')};
 
   button {
     padding-top: 6px;
