@@ -59,7 +59,7 @@ const SendInfo = styled(motion.div)<{ error: null | string }>`
   right: -50%;
   width: max-content;
   border: ${props => (props.error ? '1px solid rgba(139, 0, 0, 0.9)' : '1px solid royalblue')};
-  background-color: rgba(24, 24, 24, 0.95);
+  background-color: rgba(10, 10, 10, 0.95);
   color: ${props => (props.error ? 'darkred' : 'whitesmoke')};
   border-radius: 6px;
   padding: 20px;
