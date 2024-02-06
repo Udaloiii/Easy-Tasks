@@ -38,7 +38,7 @@ export const EditableSpan: FC<EditableSpanPropsType> = ({
         <CustomInput
           autofocus
           onBlurClick={onChangeTitleHandler}
-          onChange={setNewText}
+          onchange={setNewText}
           padding={'2px 6px'}
           value={newText}
         />
