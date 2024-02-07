@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux'
 
 import { appReducer } from '@/store/reducers/app-reducer'
+import { authReducer } from '@/store/reducers/auth-reducer'
 import { taskReducer } from '@/store/reducers/task-reducer'
 import { todoReducer } from '@/store/reducers/todo-reducer'
 import { configureStore } from '@reduxjs/toolkit'
@@ -9,6 +10,7 @@ import { ThunkDispatch } from 'redux-thunk'
 
 const rootReducer = combineReducers({
   app: appReducer,
+  auth: authReducer,
   task: taskReducer,
   todolist: todoReducer,
 })
