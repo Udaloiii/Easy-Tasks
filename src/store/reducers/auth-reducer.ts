@@ -24,10 +24,6 @@ export const setIsLoginAC = (isLogin: boolean) => {
   return { isLogin, type: 'SET-IS-LOGIN' } as const
 }
 
-export const setAppInfoAC = (info: null | string) => {
-  return { info, type: 'SET-APP-INFO' } as const
-}
-
 // Thunks
 export const authMeTC = () => (dispatch: Dispatch) => {
   dispatch(setAppStatusAC('loading'))
@@ -39,7 +35,9 @@ export const authMeTC = () => (dispatch: Dispatch) => {
         dispatch(setAppInitializedAC(true))
         dispatch(setAppStatusAC('succeeded'))
       } else {
+        dispatch(setAppInitializedAC(true))
         dispatch(setAppErrorAC(res.data.messages[0]))
+        dispatch(setIsLoginAC(false))
       }
     })
     .catch(err => {
@@ -57,6 +55,7 @@ export const loginTC = (form: RequestLogInType) => (dispatch: Dispatch) => {
         dispatch(setAppStatusAC('succeeded'))
       } else {
         dispatch(setAppErrorAC(res.data.messages[0]))
+        dispatch(setIsLoginAC(false))
       }
     })
     .catch(err => {
@@ -73,7 +72,6 @@ export const logOutTC = () => (dispatch: Dispatch) => {
       if (res.data.resultCode === 0) {
         dispatch(setIsLoginAC(false))
         dispatch(setAppStatusAC('succeeded'))
-        dispatch(setAppInitializedAC(false))
       } else {
         dispatch(setAppErrorAC(res.data.messages[0]))
       }
