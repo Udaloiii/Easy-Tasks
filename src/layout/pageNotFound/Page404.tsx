@@ -1,13 +1,21 @@
 import { FC } from 'react'
-import { NavLink } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { NavLink, Navigate } from 'react-router-dom'
 
 import img from '@/assets/images/404.png'
 import { CustomButton } from '@/components/customButton/CustomButton'
+import { AppMainType } from '@/store/store'
 import { AnimatePresence, motion } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
 
 export const Page404: FC = () => {
+  const isLoggedIn = useSelector<AppMainType, boolean>(state => state.auth.isLogin)
+
+  if (!isLoggedIn) {
+    return <Navigate to={'/login'} />
+  }
+
   return (
     <AnimatePresence>
       <Container
