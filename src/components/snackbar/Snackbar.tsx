@@ -27,10 +27,12 @@ export const Snackbar: FC = memo(() => {
 
   useEffect(() => {
     if (conditionVisible) {
-      setTimeout(() => {
+      const id = setTimeout(() => {
         dispatch(setAppInfoAC(null))
         dispatch(setAppErrorAC(null))
       }, 4000)
+
+      return () => clearTimeout(id)
     }
   }, [error, info, dispatch, conditionVisible])
 
@@ -45,7 +47,7 @@ export const Snackbar: FC = memo(() => {
           transition={transition}
           variants={variants}
         >
-          {error ? error : info}
+          {error || info}
         </SendInfo>
       )}
     </AnimatePresence>
