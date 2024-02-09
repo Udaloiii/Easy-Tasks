@@ -4,17 +4,21 @@ import { Dispatch } from 'redux'
 
 type AuthStateType = {
   isLogin: boolean
+  userName: string
 }
 const initialState: AuthStateType = {
   isLogin: false,
+  userName: '',
 }
 
-type ActionType = ReturnType<typeof setIsLoginAC>
+type ActionType = ReturnType<typeof setIsLoginAC> | ReturnType<typeof setUserNameAC>
 export const authReducer = (state = initialState, action: ActionType): AuthStateType => {
   switch (action.type) {
     case 'SET-IS-LOGIN':
       return { ...state, isLogin: action.isLogin }
 
+    case 'SET-USER-NAME':
+      return { ...state, userName: action.name }
     default:
       return state
   }
@@ -22,6 +26,9 @@ export const authReducer = (state = initialState, action: ActionType): AuthState
 
 export const setIsLoginAC = (isLogin: boolean) => {
   return { isLogin, type: 'SET-IS-LOGIN' } as const
+}
+export const setUserNameAC = (name: string) => {
+  return { name, type: 'SET-USER-NAME' } as const
 }
 
 // Thunks
@@ -31,6 +38,7 @@ export const authMeTC = () => (dispatch: Dispatch) => {
     .authMe()
     .then(res => {
       if (res.data.resultCode === 0) {
+        dispatch(setUserNameAC(res.data.data.login))
         dispatch(setIsLoginAC(true))
         dispatch(setAppInitializedAC(true))
         dispatch(setAppStatusAC('succeeded'))
@@ -72,6 +80,8 @@ export const logOutTC = () => (dispatch: Dispatch) => {
       if (res.data.resultCode === 0) {
         dispatch(setIsLoginAC(false))
         dispatch(setAppStatusAC('succeeded'))
+        // dispatch(setUserNameAC(''))
+        // dispatch(setTodosAC([]))
       } else {
         dispatch(setAppErrorAC(res.data.messages[0]))
       }
