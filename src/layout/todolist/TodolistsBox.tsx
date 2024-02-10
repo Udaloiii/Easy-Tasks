@@ -2,9 +2,11 @@ import { FC, memo, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 
+import userAvatar from '@/assets/user.jpg'
 import { AddItemForm } from '@/components/addItemForm/AddItemForm'
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { Loader } from '@/components/loader/Loader'
+import { Tooltip } from '@/components/tooltip/Tooltip'
 import { Todolist } from '@/layout/todolist/Todolist'
 import { AppStatusType } from '@/store/reducers/app-reducer'
 import { logOutTC } from '@/store/reducers/auth-reducer'
@@ -18,6 +20,7 @@ export const TodolistsBox: FC = memo(() => {
   const appStatus = useSelector<AppMainType, AppStatusType>(state => state.app.status)
   const isLoggedIn = useSelector<AppMainType, boolean>(state => state.auth.isLogin)
   const todos = useSelector<AppMainType, TodolistType[]>(state => state.todolist)
+  const username = useSelector<AppMainType, string>(state => state.auth.userName)
   const dispatch = useAppDispatch()
 
   const addTodolist = useCallback((title: string) => dispatch(addTodoTC(title)), [dispatch])
@@ -33,18 +36,22 @@ export const TodolistsBox: FC = memo(() => {
 
   return (
     <>
-      {isLoggedIn && (
-        <WrapForBtn>
-          <CustomButton
-            color={'royalblue'}
-            heightIcon={'35px'}
-            iconId={'logout'}
-            onClick={logout}
-            title={'logout'}
-            widthIcon={'35px'}
-          />
-        </WrapForBtn>
-      )}
+      <WrapForUserInfo>
+        <WrapUserInfo>
+          <UserPhoto src={userAvatar} />
+          <Tooltip text={'да, это ты :)'}>
+            <UserName>{username}</UserName>
+          </Tooltip>
+        </WrapUserInfo>
+        <CustomButton
+          color={'royalblue'}
+          heightIcon={'35px'}
+          iconId={'logout'}
+          onClick={logout}
+          title={'logout'}
+          widthIcon={'35px'}
+        />
+      </WrapForUserInfo>
       <FormWrap>
         <AddItemForm onClick={addTodolist} placeholder={'create you todolist'} />
       </FormWrap>
@@ -59,10 +66,12 @@ export const TodolistsBox: FC = memo(() => {
     </>
   )
 })
-const WrapForBtn = styled.div`
+const WrapForUserInfo = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin: 10px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
 `
 const FormWrap = styled.div`
   padding: 30px 0 100px;
@@ -86,4 +95,22 @@ const TodoWrap = styled.div`
     align-items: center;
     justify-content: center;
   }
+`
+
+const UserPhoto = styled.img`
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+`
+const UserName = styled.span`
+  color: whitesmoke;
+  font-size: 1.3rem;
+  text-transform: capitalize;
+  align-self: flex-end;
+  line-height: 1;
+`
+const WrapUserInfo = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
 `
