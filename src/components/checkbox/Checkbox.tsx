@@ -1,35 +1,43 @@
-import { ChangeEvent, FC } from 'react'
+import { ChangeEvent, ComponentPropsWithoutRef, forwardRef, memo } from 'react'
 
 import { TaskStatuses } from '@/api/tasks-api'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
 
 type CheckboxType = {
-  checked: boolean
-  id?: string
-  onChange: (value: TaskStatuses) => void
-}
-export const Checkbox: FC<CheckboxType> = ({ checked, id, onChange }: CheckboxType) => {
-  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const checked = e.currentTarget.checked
+  onchange?: (value: TaskStatuses) => void
+} & ComponentPropsWithoutRef<'input'>
 
-    onChange(checked ? TaskStatuses.Completed : TaskStatuses.New)
-  }
+export const Checkbox = memo(
+  forwardRef<HTMLInputElement, CheckboxType>(({ id, name, onchange, ...rest }, ref) => {
+    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+      const checked = e.currentTarget.checked
 
-  return (
-    <Wrapper>
-      <StyledInput checked={checked} id={id} onChange={onChangeHandler} type={'checkbox'} />
-      <svg viewBox={'0 0 64 64'}>
-        <path
-          d={
-            'M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16'
-          }
-          pathLength={'575.0541381835938'}
-        ></path>
-      </svg>
-    </Wrapper>
-  )
-}
+      onchange?.(checked ? TaskStatuses.Completed : TaskStatuses.New)
+    }
+
+    return (
+      <Wrapper>
+        <StyledInput
+          id={id}
+          name={name}
+          onChange={onChangeHandler}
+          ref={ref}
+          type={'checkbox'}
+          {...rest}
+        />
+        <svg viewBox={'0 0 64 64'}>
+          <path
+            d={
+              'M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16'
+            }
+            pathLength={'575.0541381835938'}
+          ></path>
+        </svg>
+      </Wrapper>
+    )
+  })
+)
 
 const Wrapper = styled.label`
   cursor: pointer;
