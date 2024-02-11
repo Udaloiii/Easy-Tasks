@@ -1,4 +1,12 @@
-import { ChangeEvent, FC, KeyboardEvent, useState } from 'react'
+import {
+  ChangeEvent,
+  ComponentPropsWithoutRef,
+  KeyboardEvent,
+  forwardRef,
+  memo,
+  useCallback,
+  useState,
+} from 'react'
 
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -8,97 +16,107 @@ import styled from 'styled-components'
 type CustomInputPropsType = {
   autofocus?: boolean
   error?: null | string
+  // name?: string
   onBlurClick?: (text: string) => void
-  onChange?: (value: string) => void
   onEnterPress?: (value: string) => void
+  onchange?: (value: string) => void
   padding?: string
-  placeholder?: string
   setError?: (value: null | string) => void
-  type?: 'checkbox' | 'email' | 'password' | 'text'
-  value: string
-}
-export const CustomInput: FC<CustomInputPropsType> = ({
-  autofocus,
-  error,
-  onBlurClick,
-  onChange,
-  onEnterPress,
-  padding,
-  placeholder,
-  setError,
-  type,
-  value,
-}: CustomInputPropsType) => {
-  const [visible, setVisible] = useState(false)
+  // type?: 'email' | 'password' | 'text'
+} & ComponentPropsWithoutRef<'input'>
 
-  const onChangeVisibility = () => setVisible(prevState => !prevState)
-  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setError?.(null)
-    onChange?.(e.currentTarget.value)
-  }
-  const onBlurHandler = () => onBlurClick?.(value)
+export const CustomInput = memo(
+  forwardRef<HTMLInputElement, CustomInputPropsType>(
+    (
+      {
+        autofocus,
+        error,
+        // name,
+        onBlurClick,
+        onEnterPress,
+        onchange,
+        padding,
+        setError,
+        type,
+        value,
+        ...rest
+      },
+      ref
+    ) => {
+      const [visible, setVisible] = useState(false)
 
-  const onPressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
-    setError?.(null)
-    if (e.key === 'Enter') {
-      onEnterPress?.(e.currentTarget.value)
-      e.currentTarget.blur()
+      const onChangeVisibility = useCallback(() => setVisible(prevState => !prevState), [])
+      const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        error && setError?.(null)
+        onchange?.(e.currentTarget.value)
+      }
+      const onBlurHandler = () => onBlurClick?.(value as string)
+
+      const onPressEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+          onEnterPress?.(e.currentTarget.value)
+          e.currentTarget.blur()
+        }
+      }
+
+      const condition =
+        type === 'password' &&
+        (visible ? (
+          <CustomButton
+            heightIcon={'14px'}
+            iconId={'visible'}
+            onClick={onChangeVisibility}
+            viewBoxForIcon={'0 0 14 14'}
+            widthIcon={'14px'}
+          />
+        ) : (
+          <CustomButton
+            heightIcon={'14px'}
+            iconId={'hidden'}
+            onClick={onChangeVisibility}
+            viewBoxForIcon={'0 0 14 14'}
+            widthIcon={'14px'}
+          />
+        ))
+
+      return (
+        <Wrap>
+          <StyleInput
+            autoFocus={autofocus || false}
+            // name={name}
+            onBlur={onBlurHandler}
+            onChange={onChangeHandler}
+            onKeyUp={onPressEnter}
+            padding={padding}
+            ref={ref}
+            type={type === 'password' && !visible ? 'password' : 'text'}
+            value={value}
+            {...rest}
+          />
+          <AnimatePresence>
+            {error && (
+              <StyleError
+                animate={{ opacity: 1 }}
+                errLength={error.length}
+                exit={{ opacity: 0, transition: { duration: 0.9 } }}
+                initial={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                {error}
+              </StyleError>
+            )}
+          </AnimatePresence>
+          {condition}
+        </Wrap>
+      )
     }
-  }
-
-  const condition =
-    type === 'password' &&
-    (visible ? (
-      <CustomButton
-        heightIcon={'14px'}
-        iconId={'visible'}
-        onClick={onChangeVisibility}
-        viewBoxForIcon={'0 0 14 14'}
-        widthIcon={'14px'}
-      />
-    ) : (
-      <CustomButton
-        heightIcon={'14px'}
-        iconId={'hidden'}
-        onClick={onChangeVisibility}
-        viewBoxForIcon={'0 0 14 14'}
-        widthIcon={'14px'}
-      />
-    ))
-
-  return (
-    <Wrap>
-      <StyleInput
-        autoFocus={autofocus || false}
-        onBlur={onBlurHandler}
-        onChange={onChangeHandler}
-        onKeyDown={onPressEnter}
-        padding={padding}
-        placeholder={placeholder}
-        type={type === 'password' && !visible ? 'password' : 'text'}
-        value={value}
-      />
-      <AnimatePresence>
-        {error && (
-          <StyleError
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.9 } }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {error}
-          </StyleError>
-        )}
-      </AnimatePresence>
-      {condition}
-    </Wrap>
   )
-}
+)
 const Wrap = styled.div`
-  border: 1px solid transparent;
+  border: 1px solid rgba(128, 128, 128, 0.3);
   border-radius: 4px;
-  transition: border-color 0.7s;
-  background-color: #363636;
+  transition: 0.7s;
+  background-color: rgba(24, 24, 24, 0.9);
   display: flex;
   width: 100%;
   max-width: 550px;
@@ -109,8 +127,9 @@ const Wrap = styled.div`
     transition: 0.7s;
     border: 1px solid royalblue;
     caret-color: white;
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.5);
   }
+
   button {
     padding: 0 5px;
   }
@@ -122,12 +141,15 @@ const StyleInput = styled.input<{ padding?: string }>`
   outline: none;
   background-color: transparent;
   color: whitesmoke;
+  font-size: 1rem;
 `
 
-const StyleError = styled(motion.span)`
+const StyleError = styled(motion.span)<{ errLength?: number }>`
   position: absolute;
   top: -25px;
   left: 50%;
   transform: translateX(-50%);
   color: rgba(139, 0, 0, 0.9);
+  font-size: ${props => (props.errLength && props.errLength > 20 ? '0.8rem' : '1rem')};
+  white-space: nowrap;
 `
