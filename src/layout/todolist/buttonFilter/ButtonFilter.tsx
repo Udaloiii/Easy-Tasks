@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 
 import { FilterValuesType } from '@/store/reducers/todo-reducer'
 // eslint-disable-next-line import/no-named-as-default
@@ -9,17 +9,15 @@ type ButtonFilterPropsType = {
   onClick?: (value: FilterValuesType) => void
   title: FilterValuesType
 }
-export const ButtonFilter: FC<ButtonFilterPropsType> = ({
-  filter,
-  onClick,
-  title,
-}: ButtonFilterPropsType) => {
-  return (
-    <StyleButton active={filter === title} onClick={() => onClick?.(title)} title={title}>
-      <span>{title}</span>
-    </StyleButton>
-  )
-}
+export const ButtonFilter: FC<ButtonFilterPropsType> = memo(
+  ({ filter, onClick, title }: ButtonFilterPropsType) => {
+    return (
+      <StyleButton active={filter === title} onClick={() => onClick?.(title)} title={title}>
+        <span>{title}</span>
+      </StyleButton>
+    )
+  }
+)
 
 const StyleButton = styled.button<{ active: boolean; title?: FilterValuesType }>`
   font-size: 17px;
