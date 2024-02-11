@@ -1,35 +1,74 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
+import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
 
+import { RequestLogInType } from '@/api/auth-api'
+import background from '@/assets/images/background-login.webp'
 import { Checkbox } from '@/components/checkbox/Checkbox'
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { CustomInput } from '@/components/customInput/CustomInput'
+import { loginTC } from '@/store/reducers/auth-reducer'
+import { AppMainType, useAppDispatch } from '@/store/store'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
-
 export const Login: FC = () => {
-  const [remember, setRemember] = useState(false)
-  const setRememberHandler = () => setRemember(prevState => !prevState)
+  const isLoggedIn = useSelector<AppMainType, boolean>(state => state.auth.isLogin)
+  const dispatch = useAppDispatch()
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    reset,
+  } = useForm<RequestLogInType>()
+
+  const onSubmit = (data: RequestLogInType) => {
+    dispatch(loginTC(data))
+    reset()
+  }
+  const emailRegex =
+    /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
+
+  if (isLoggedIn) {
+    return <Navigate to={'/'} />
+  }
 
   return (
     <StyleLogin>
-      <Wrap>
-        <CustomInput placeholder={'email'} type={'email'} value={''} />
-        <CustomInput placeholder={'password'} type={'password'} value={''} />
+      <StyleForm onSubmit={handleSubmit(onSubmit)}>
+        <CustomInput
+          placeholder={'email'}
+          type={'email'}
+          {...register('email', {
+            pattern: { message: 'Invalid email', value: emailRegex },
+            required: 'Email is required',
+          })}
+          error={errors.email?.message}
+        />
+        <CustomInput
+          placeholder={'password'}
+          type={'password'}
+          {...register('password', {
+            minLength: { message: 'Password has to be at least 3 characters long', value: 3 },
+            required: 'Password is required',
+          })}
+          error={errors.password?.message}
+        />
         <WrapCheckbox>
-          <Checkbox checked={remember} id={'remember'} onChange={setRememberHandler} />
+          <Checkbox id={'remember'} {...register('rememberMe')} />
           <StyleRemember htmlFor={'remember'}>Remember me</StyleRemember>
         </WrapCheckbox>
-        <CustomButton iconId={'login'} title={'login'} type={'submit'} />
+        <CustomButton color={'royalblue'} iconId={'login'} title={'login'} type={'submit'} />
         <Text>Don`t have an account? Use a free:</Text>
-        <WrapCheckbox>
+        <WrapFreeAcc>
           <span>
             Email: <span>free@samuraijs.com</span>
           </span>
           <span>
             Password: <span>free</span>
           </span>
-        </WrapCheckbox>
-      </Wrap>
+        </WrapFreeAcc>
+      </StyleForm>
     </StyleLogin>
   )
 }
@@ -37,8 +76,7 @@ export const Login: FC = () => {
 const StyleLogin = styled.div`
   width: 100vw;
   height: 100vh;
-  background: url('https://img.freepik.com/free-photo/moon-sky-night-background-asset-game-2d-futuristic-generative-ai_191095-2046.jpg?t=st=1706782256~exp=1706785856~hmac=528c18c08811ebb6a0465cc6ea0dc6ee2fdccb82e2dc2f92f123aad193253db4&w=2000')
-    50% / cover no-repeat;
+  background: url(${background}) 50% / cover no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,26 +85,29 @@ const StyleLogin = styled.div`
     height: 30px;
   }
 `
-const Wrap = styled.form`
+const StyleForm = styled.form`
   padding: 40px 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   border-radius: 10px;
-  //border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 10px 0 inset rgba(91, 89, 89, 0.5);
   background-color: rgba(0, 0, 0, 0.8);
 `
 const WrapCheckbox = styled.div`
+  width: 100%;
   display: flex;
   align-items: flex-end;
   gap: 15px;
+  color: rgba(65, 105, 225, 0.5);
+
   svg {
     width: 15px;
     height: 15px;
   }
+
   span {
     :nth-child(1) {
       color: rgba(128, 128, 128, 0.5);
@@ -85,6 +126,7 @@ const StyleRemember = styled.label`
     transition: 0.3s;
     transform: scale(1.05);
   }
+
   &:active {
     transition: 0.3s;
     transform: scale(1);
@@ -94,4 +136,25 @@ const Text = styled.p`
   color: rgba(255, 255, 255, 0.4);
   padding: 0;
   margin: 0;
+`
+
+const WrapFreeAcc = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  color: rgba(65, 105, 225, 0.5);
+  font-size: 0.8rem;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  span {
+    :nth-child(1) {
+      color: rgba(128, 128, 128, 0.5);
+      font-size: 0.8rem;
+    }
+  }
 `
