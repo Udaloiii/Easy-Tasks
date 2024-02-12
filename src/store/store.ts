@@ -21,3 +21,6 @@ export const store = configureStore({
 export type AppMainType = ReturnType<typeof store.getState>
 type AppDispatchType = ThunkDispatch<AppMainType, any, AnyAction>
 export const useAppDispatch = () => useDispatch<AppDispatchType>()
+
+// @ts-ignore
+window.store = store
