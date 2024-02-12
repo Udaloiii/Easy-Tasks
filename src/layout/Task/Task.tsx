@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo, useCallback } from 'react'
 
 import { TaskStatuses } from '@/api/tasks-api'
 import { Checkbox } from '@/components/checkbox/Checkbox'
@@ -16,15 +16,21 @@ type TaskPropsType = {
   title: string
   todoId: string
 }
-export const Task: FC<TaskPropsType> = ({ id, isDone, title, todoId }: TaskPropsType) => {
+export const Task: FC<TaskPropsType> = memo(({ id, isDone, title, todoId }: TaskPropsType) => {
   const dispatch = useAppDispatch()
 
-  const updateTaskStatus = (status: TaskStatuses) => {
-    dispatch(updateTaskTC(todoId, id, { status }))
-  }
+  const updateTaskStatus = useCallback(
+    (status: TaskStatuses) => {
+      dispatch(updateTaskTC(todoId, id, { status }))
+    },
+    [dispatch, id, todoId]
+  )
 
-  const changeTaskTitle = (title: string) => dispatch(updateTaskTC(todoId, id, { title }))
-  const removeTask = () => dispatch(deleteTaskTC(todoId, id))
+  const changeTaskTitle = useCallback(
+    (title: string) => dispatch(updateTaskTC(todoId, id, { title })),
+    [dispatch, id, todoId]
+  )
+  const removeTask = useCallback(() => dispatch(deleteTaskTC(todoId, id)), [dispatch, id, todoId])
 
   return (
     <Container
@@ -44,7 +50,7 @@ export const Task: FC<TaskPropsType> = ({ id, isDone, title, todoId }: TaskProps
       <CustomButton heightIcon={'25px'} iconId={'delete'} onClick={removeTask} widthIcon={'25px'} />
     </Container>
   )
-}
+})
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -57,6 +63,9 @@ const Container = styled(motion.div)`
   }
 `
 const Text = styled.p<{ isDone: boolean }>`
+  font-family:
+    Open Sans,
+    sans-serif;
   max-width: 100%;
   color: ${props => (props.isDone ? 'grey' : 'whitesmoke')};
   font-size: 1.2rem;
