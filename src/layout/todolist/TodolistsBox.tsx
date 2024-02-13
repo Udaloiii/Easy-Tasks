@@ -35,7 +35,7 @@ export const TodolistsBox: FC = () => {
   if (!isLoggedIn) {
     return <Navigate to={'/login'} />
   }
-  console.log('TodolistsBox is render')
+  // console.log('TodolistsBox is render')
 
   return (
     <>
