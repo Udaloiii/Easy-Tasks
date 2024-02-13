@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useEffect } from 'react'
+import { FC, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 
@@ -10,16 +10,18 @@ import { Tooltip } from '@/components/tooltip/Tooltip'
 import { Todolist } from '@/layout/todolist/Todolist'
 import { AppStatusType } from '@/store/reducers/app-reducer'
 import { logOutTC } from '@/store/reducers/auth-reducer'
+import { TaskStateType } from '@/store/reducers/task-reducer'
 import { TodolistType, addTodoTC, setTodoTC } from '@/store/reducers/todo-reducer'
 import { AppMainType, useAppDispatch } from '@/store/store'
 import { AnimatePresence } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
 
-export const TodolistsBox: FC = memo(() => {
+export const TodolistsBox: FC = () => {
   const appStatus = useSelector<AppMainType, AppStatusType>(state => state.app.status)
   const isLoggedIn = useSelector<AppMainType, boolean>(state => state.auth.isLogin)
   const todos = useSelector<AppMainType, TodolistType[]>(state => state.todolist)
+  const tasks = useSelector<AppMainType, TaskStateType>(state => state.task)
   const username = useSelector<AppMainType, string>(state => state.auth.userName)
   const dispatch = useAppDispatch()
 
@@ -33,6 +35,7 @@ export const TodolistsBox: FC = memo(() => {
   if (!isLoggedIn) {
     return <Navigate to={'/login'} />
   }
+  console.log('TodolistsBox is render')
 
   return (
     <>
@@ -58,14 +61,24 @@ export const TodolistsBox: FC = memo(() => {
       {<AnimatePresence>{appStatus === 'loading' && <Loader />}</AnimatePresence>}
       <TodoWrap>
         <AnimatePresence>
-          {todos.map(el => (
-            <Todolist filter={el.filter} id={el.id} key={el.id} title={el.title} />
-          ))}
+          {todos.map(el => {
+            const allTodolistTasks = tasks[el.id]
+
+            return (
+              <Todolist
+                filter={el.filter}
+                id={el.id}
+                key={el.id}
+                tasks={allTodolistTasks}
+                title={el.title}
+              />
+            )
+          })}
         </AnimatePresence>
       </TodoWrap>
     </>
   )
-})
+}
 const WrapForUserInfo = styled.div`
   display: flex;
   justify-content: space-between;
