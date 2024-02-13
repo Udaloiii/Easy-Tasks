@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 
 import icon from '../../assets/icons/svgSprite.svg'
 
@@ -8,7 +8,7 @@ type IconPropsType = {
   viewBox?: string
   width?: string
 }
-export const Icon: FC<IconPropsType> = ({ height, iconId, viewBox, width }: IconPropsType) => {
+export const Icon: FC<IconPropsType> = memo(({ height, iconId, viewBox, width }: IconPropsType) => {
   return (
     <svg
       height={height || '24'}
@@ -19,4 +19,4 @@ export const Icon: FC<IconPropsType> = ({ height, iconId, viewBox, width }: Icon
       <use xlinkHref={`${icon}#${iconId}`}></use>
     </svg>
   )
-}
+})

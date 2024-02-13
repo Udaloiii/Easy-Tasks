@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 
 import { Icon } from '@/components/icon/Icon'
 import { motion } from 'framer-motion'
@@ -15,31 +15,35 @@ type ButtonPropsType = {
   viewBoxForIcon?: string
   widthIcon?: string
 }
-export const CustomButton: FC<ButtonPropsType> = ({
-  color,
-  heightIcon,
-  iconId,
-  onClick,
-  title,
-  type,
-  viewBoxForIcon,
-  widthIcon,
-}: ButtonPropsType) => {
-  return (
-    <StyleButton
-      animate={{ opacity: 1 }}
-      color={color}
-      exit={{ opacity: 0, transition: { duration: 0.3 } }}
-      initial={{ opacity: 0 }}
-      onClick={onClick}
-      transition={{ duration: 0.5 }}
-      type={type || 'button'}
-    >
-      {title && <Title>{title}</Title>}
-      <Icon height={heightIcon} iconId={iconId} viewBox={viewBoxForIcon} width={widthIcon} />
-    </StyleButton>
-  )
-}
+export const CustomButton: FC<ButtonPropsType> = memo(
+  ({
+    color,
+    heightIcon,
+    iconId,
+    onClick,
+    title,
+    type,
+    viewBoxForIcon,
+    widthIcon,
+  }: ButtonPropsType) => {
+    // console.log('BUTTON RENDER')
+
+    return (
+      <StyleButton
+        animate={{ opacity: 1 }}
+        color={color}
+        exit={{ opacity: 0, transition: { duration: 0.3 } }}
+        initial={{ opacity: 0 }}
+        onClick={onClick}
+        transition={{ duration: 0.5 }}
+        type={type || 'button'}
+      >
+        <Title>{title}</Title>
+        <Icon height={heightIcon} iconId={iconId} viewBox={viewBoxForIcon} width={widthIcon} />
+      </StyleButton>
+    )
+  }
+)
 
 const StyleButton = styled(motion.button)<{ color?: string }>`
   background-color: transparent;

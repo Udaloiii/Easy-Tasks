@@ -4,7 +4,6 @@ import {
   KeyboardEvent,
   forwardRef,
   memo,
-  useCallback,
   useState,
 } from 'react'
 
@@ -16,7 +15,6 @@ import styled from 'styled-components'
 type CustomInputPropsType = {
   autofocus?: boolean
   error?: null | string
-  // name?: string
   onBlurClick?: (text: string) => void
   onEnterPress?: (value: string) => void
   onchange?: (value: string) => void
@@ -31,7 +29,6 @@ export const CustomInput = memo(
       {
         autofocus,
         error,
-        // name,
         onBlurClick,
         onEnterPress,
         onchange,
@@ -45,7 +42,7 @@ export const CustomInput = memo(
     ) => {
       const [visible, setVisible] = useState(false)
 
-      const onChangeVisibility = useCallback(() => setVisible(prevState => !prevState), [])
+      const onChangeVisibility = () => setVisible(prevState => !prevState)
       const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         error && setError?.(null)
         onchange?.(e.currentTarget.value)
@@ -83,7 +80,6 @@ export const CustomInput = memo(
         <Wrap>
           <StyleInput
             autoFocus={autofocus || false}
-            // name={name}
             onBlur={onBlurHandler}
             onChange={onChangeHandler}
             onKeyUp={onPressEnter}
