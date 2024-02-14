@@ -27,15 +27,19 @@ export const Loader: FC = () => {
 const Wrap = styled(motion.div)`
   width: 300px;
   //height: 60px;
-  position: relative;
+  //position: relative;
+  position: fixed;
   z-index: 1;
-  top: -85px;
+  //top: -85px;
+  top: 150px;
   left: 50%;
   transform: translateX(-50%);
 `
 const Circle = styled(motion.div)`
-  width: 25px;
-  height: 25px;
+  //width: 25px;
+  //height: 25px;
+  width: 40px;
+  height: 40px;
   position: absolute;
   border-radius: 50%;
   background-color: #fff;
