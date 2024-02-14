@@ -105,9 +105,14 @@ export const addTaskTC = (todoId: string, title: string) => (dispatch: Dispatch)
   tasksApi
     .addTask(todoId, title)
     .then(res => {
-      dispatch(setAppStatusAC('succeeded'))
-      dispatch(addTaskAC(todoId, res.data.data.item))
-      dispatch(setAppInfoAC('task is added'))
+      if (res.data.resultCode === 0) {
+        dispatch(setAppStatusAC('succeeded'))
+        dispatch(addTaskAC(todoId, res.data.data.item))
+        dispatch(setAppInfoAC('task is added'))
+      } else {
+        dispatch(setAppErrorAC(res.data.messages[0]))
+        dispatch(setAppStatusAC('succeeded'))
+      }
     })
     .catch(err => {
       dispatch(setAppStatusAC('failed'))
