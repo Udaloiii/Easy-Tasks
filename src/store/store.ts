@@ -5,8 +5,7 @@ import { authReducer } from '@/store/reducers/auth-reducer'
 import { taskReducer } from '@/store/reducers/task-reducer'
 import { todoReducer } from '@/store/reducers/todo-reducer'
 import { configureStore } from '@reduxjs/toolkit'
-import { AnyAction, combineReducers } from 'redux'
-import { ThunkDispatch } from 'redux-thunk'
+import { combineReducers } from 'redux'
 
 const rootReducer = combineReducers({
   app: appReducer,
@@ -19,7 +18,8 @@ export const store = configureStore({
   reducer: rootReducer,
 })
 export type AppMainType = ReturnType<typeof store.getState>
-type AppDispatchType = ThunkDispatch<AppMainType, any, AnyAction>
+// type AppDispatchType = ThunkDispatch<AppMainType, any, AnyAction>
+type AppDispatchType = typeof store.dispatch
 export const useAppDispatch = () => useDispatch<AppDispatchType>()
 
 // @ts-ignore
