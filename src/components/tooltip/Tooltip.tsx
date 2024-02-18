@@ -9,24 +9,6 @@ type TooltipProps = {
   text: string
 }
 
-const TooltipContainer = styled.div`
-  position: relative;
-  display: inline-block;
-`
-
-const TooltipText = styled(motion.div)`
-  position: absolute;
-  top: -10px;
-  right: -110px;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #fff;
-  padding: 0.5rem;
-  border-radius: 4px;
-  opacity: 0;
-  box-shadow: 0 0 3px 0 royalblue;
-`
-
 export const Tooltip = ({ children, text }: TooltipProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -67,3 +49,21 @@ export const Tooltip = ({ children, text }: TooltipProps) => {
     </TooltipContainer>
   )
 }
+
+const TooltipContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`
+
+const TooltipText = styled(motion.div)`
+  position: absolute;
+  top: -10px;
+  right: -110px;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 4px;
+  opacity: 0;
+  box-shadow: 0 0 3px 0 royalblue;
+`

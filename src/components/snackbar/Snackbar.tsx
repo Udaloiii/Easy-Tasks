@@ -1,7 +1,7 @@
 import { FC, memo, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { setAppErrorAC, setAppInfoAC } from '@/store/reducers/app-reducer'
+import { appActions } from '@/store/reducers/app-reducer'
 import { AppMainType, useAppDispatch } from '@/store/store'
 import { AnimatePresence, motion } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
@@ -28,8 +28,8 @@ export const Snackbar: FC = memo(() => {
   useEffect(() => {
     if (conditionVisible) {
       const id = setTimeout(() => {
-        dispatch(setAppInfoAC(null))
-        dispatch(setAppErrorAC(null))
+        dispatch(appActions.setAppInfo({ info: null }))
+        dispatch(appActions.setAppError({ error: null }))
       }, 4000)
 
       return () => clearTimeout(id)
