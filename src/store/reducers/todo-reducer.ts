@@ -41,9 +41,6 @@ const slice = createSlice({
     },
     setTodos: (_state, action: PayloadAction<{ todolists: ResponseGetTodosType[] }>) => {
       return action.payload.todolists.map(todo => ({ ...todo, filter: 'all' }))
-      // action.payload.todolists.forEach(todo => {
-      //   state.push({ ...todo, filter: 'all' })
-      // })
     },
   },
 })
