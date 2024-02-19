@@ -1,132 +1,121 @@
 import { ResponseGetTodosType, todosApi } from '@/api/todos-api'
-import { setAppErrorAC, setAppInfoAC, setAppStatusAC } from '@/store/reducers/app-reducer'
+import { appActions } from '@/store/reducers/app-reducer'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { Dispatch } from 'redux'
 
 export type FilterValuesType = 'active' | 'all' | 'completed'
 export type TodolistType = {
   filter: FilterValuesType
 } & ResponseGetTodosType
-const initialState = [] as TodolistType[]
 
-// ACTION TYPE
-type ActionType =
-  | ReturnType<typeof addTodoAC>
-  | ReturnType<typeof changeTodoFilterAC>
-  | ReturnType<typeof changeTodoTitleAC>
-  | ReturnType<typeof deleteTodoAC>
-  | ReturnType<typeof setTodosAC>
-export const todoReducer = (state = initialState, action: ActionType): TodolistType[] => {
-  switch (action.type) {
-    case 'SET-TODOS': {
-      return action.todolists.map(todo => ({ ...todo, filter: 'all' }))
-    }
+const slice = createSlice({
+  initialState: [] as TodolistType[],
+  name: 'todo',
+  reducers: {
+    addTodo: (state, action: PayloadAction<{ todo: ResponseGetTodosType }>) => {
+      state.unshift({ ...action.payload.todo, filter: 'all' })
+    },
+    changeTodoFilter: (
+      state,
+      action: PayloadAction<{ newValue: FilterValuesType; todoId: string }>
+    ) => {
+      const index = state.findIndex(todo => todo.id === action.payload.todoId)
 
-    case 'ADD-TODO': {
-      return [{ ...action.todo, filter: 'all' }, ...state]
-    }
+      if (index !== -1) {
+        state[index].filter = action.payload.newValue
+      }
+    },
+    changeTodoTitle: (state, action: PayloadAction<{ newTitle: string; todoId: string }>) => {
+      const index = state.findIndex(todo => todo.id === action.payload.todoId)
 
-    case 'DELETE-TODO': {
-      return state.filter(el => el.id !== action.todoId)
-    }
+      if (index !== -1) {
+        state[index].title = action.payload.newTitle
+      }
+    },
+    deleteTodo: (state, action: PayloadAction<{ todoId: string }>) => {
+      const index = state.findIndex(todo => todo.id === action.payload.todoId)
 
-    case 'CHANGE-TODO-TITLE': {
-      return state.map(el => (el.id === action.todoId ? { ...el, title: action.newTitle } : el))
-    }
+      if (index !== -1) {
+        state.splice(index, 1)
+      }
+    },
+    setTodos: (_state, action: PayloadAction<{ todolists: ResponseGetTodosType[] }>) => {
+      return action.payload.todolists.map(todo => ({ ...todo, filter: 'all' }))
+      // action.payload.todolists.forEach(todo => {
+      //   state.push({ ...todo, filter: 'all' })
+      // })
+    },
+  },
+})
 
-    case 'CHANGE-TODO-FILTER': {
-      return state.map(el => (el.id === action.todoId ? { ...el, filter: action.newValue } : el))
-    }
-
-    default:
-      return state
-  }
-}
-
-// Action creators
-export const setTodosAC = (todolists: ResponseGetTodosType[]) => {
-  return { todolists, type: 'SET-TODOS' } as const
-}
-export const addTodoAC = (title: string, todo: ResponseGetTodosType) => {
-  return { title, todo, type: 'ADD-TODO' } as const
-}
-
-export const deleteTodoAC = (todoId: string) => {
-  return { todoId, type: 'DELETE-TODO' } as const
-}
-
-export const changeTodoTitleAC = (todoId: string, newTitle: string) => {
-  return { newTitle, todoId, type: 'CHANGE-TODO-TITLE' } as const
-}
-
-export const changeTodoFilterAC = (todoId: string, newValue: FilterValuesType) => {
-  return { newValue, todoId, type: 'CHANGE-TODO-FILTER' } as const
-}
+export const todoReducer = slice.reducer
+export const todoActions = slice.actions
 
 // THUNKS
 
 export const setTodoTC = () => (dispatch: Dispatch) => {
-  dispatch(setAppErrorAC(null))
-  dispatch(setAppStatusAC('loading'))
+  // dispatch(appActions.setAppError({ error: null }))
+  dispatch(appActions.setAppStatus({ status: 'loading' }))
   todosApi
     .getTodo()
     .then(res => {
-      dispatch(setAppStatusAC('succeeded'))
-      dispatch(setTodosAC(res.data))
+      dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+      dispatch(todoActions.setTodos({ todolists: res.data }))
     })
     .catch(err => {
-      dispatch(setAppStatusAC('failed'))
-      dispatch(setAppErrorAC(err.message))
+      dispatch(appActions.setAppStatus({ status: 'failed' }))
+      dispatch(appActions.setAppError({ error: err.message }))
     })
 }
 export const addTodoTC = (title: string) => (dispatch: Dispatch) => {
-  dispatch(setAppStatusAC('loading'))
-  dispatch(setAppErrorAC(null))
+  dispatch(appActions.setAppStatus({ status: 'loading' }))
+  // dispatch(appActions.setAppError({ error: null }))
   todosApi
     .addTodo(title)
     .then(res => {
       if (res.data.resultCode === 0) {
-        dispatch(setAppStatusAC('succeeded'))
-        dispatch(addTodoAC(title, res.data.data.item))
-        dispatch(setAppInfoAC('todo is added'))
+        dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+        dispatch(todoActions.addTodo({ todo: res.data.data.item }))
+        dispatch(appActions.setAppInfo({ info: 'todo is added' }))
       } else {
-        dispatch(setAppErrorAC(res.data.messages[0]))
-        dispatch(setAppStatusAC('succeeded'))
+        dispatch(appActions.setAppError({ error: res.data.messages[0] }))
+        dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       }
     })
     .catch(err => {
-      dispatch(setAppStatusAC('failed'))
-      dispatch(setAppErrorAC(err.message))
+      dispatch(appActions.setAppStatus({ status: 'failed' }))
+      dispatch(appActions.setAppError({ error: err.message }))
     })
 }
 
 export const deleteTodoTC = (todoId: string) => (dispatch: Dispatch) => {
-  dispatch(setAppStatusAC('loading'))
-  dispatch(setAppErrorAC(null))
+  dispatch(appActions.setAppStatus({ status: 'loading' }))
+  // dispatch(appActions.setAppError({ error: null }))
   todosApi
     .deleteTodo(todoId)
     .then(() => {
-      dispatch(setAppStatusAC('succeeded'))
-      dispatch(deleteTodoAC(todoId))
-      dispatch(setAppInfoAC('todo is deleted'))
+      dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+      dispatch(todoActions.deleteTodo({ todoId }))
+      dispatch(appActions.setAppInfo({ info: 'todo is deleted' }))
     })
     .catch(err => {
-      dispatch(setAppStatusAC('failed'))
-      dispatch(setAppErrorAC(err.message))
+      dispatch(appActions.setAppStatus({ status: 'failed' }))
+      dispatch(appActions.setAppError({ error: err.message }))
     })
 }
 
 export const updateTodoTitleTC = (todoId: string, newTitle: string) => (dispatch: Dispatch) => {
-  dispatch(setAppStatusAC('loading'))
-  dispatch(setAppErrorAC(null))
+  dispatch(appActions.setAppStatus({ status: 'loading' }))
+  // dispatch(appActions.setAppError({ error: null }))
   todosApi
     .changeTodoTitle(todoId, newTitle)
     .then(() => {
-      dispatch(setAppStatusAC('succeeded'))
-      dispatch(changeTodoTitleAC(todoId, newTitle))
-      dispatch(setAppInfoAC('title is updated'))
+      dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+      dispatch(todoActions.changeTodoTitle({ newTitle, todoId }))
+      dispatch(appActions.setAppInfo({ info: 'title is updated' }))
     })
     .catch(err => {
-      dispatch(setAppStatusAC('failed'))
-      dispatch(setAppErrorAC(err.message))
+      dispatch(appActions.setAppStatus({ status: 'failed' }))
+      dispatch(appActions.setAppError({ error: err.message }))
     })
 }
