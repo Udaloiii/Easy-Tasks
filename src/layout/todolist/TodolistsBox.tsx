@@ -18,11 +18,11 @@ import { AnimatePresence } from 'framer-motion'
 import styled from 'styled-components'
 
 export const TodolistsBox: FC = () => {
+  const username = useSelector<AppMainType, string>(state => state.auth.userName)
   const appStatus = useSelector<AppMainType, AppStatusType>(state => state.app.status)
   const isLoggedIn = useSelector<AppMainType, boolean>(state => state.auth.isLogin)
   const todos = useSelector<AppMainType, TodolistType[]>(state => state.todolist)
   const tasks = useSelector<AppMainType, TaskStateType>(state => state.task)
-  const username = useSelector<AppMainType, string>(state => state.auth.userName)
   const dispatch = useAppDispatch()
 
   const addTodolist = useCallback((title: string) => dispatch(addTodoTC(title)), [dispatch])
@@ -32,10 +32,14 @@ export const TodolistsBox: FC = () => {
     isLoggedIn && dispatch(setTodoTC())
   }, [dispatch, isLoggedIn])
 
+  // useEffect(() => {
+  //   console.log('AUTH REQUEST')
+  //   !username && dispatch(authMeTC())
+  // }, [dispatch, username])
+
   if (!isLoggedIn) {
     return <Navigate to={'/login'} />
   }
-  // console.log('TodolistsBox is render')
 
   return (
     <>

@@ -9,8 +9,8 @@ import { ButtonFilter } from '@/layout/todolist/buttonFilter/ButtonFilter'
 import { TasksType, addTaskTC, setTasksTC } from '@/store/reducers/task-reducer'
 import {
   FilterValuesType,
-  changeTodoFilterAC,
   deleteTodoTC,
+  todoActions,
   updateTodoTitleTC,
 } from '@/store/reducers/todo-reducer'
 import { useAppDispatch } from '@/store/store'
@@ -27,7 +27,6 @@ type TodolistPropsType = {
 
 export const Todolist: FC<TodolistPropsType> = memo(
   ({ filter, id, tasks, title }: TodolistPropsType) => {
-    // const allTasks = useSelector<AppMainType, TaskStateType>(state => state.task)
     const dispatch = useAppDispatch()
     let filteredTask = tasks
 
@@ -53,7 +52,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
 
     const changeFilterTodo = useCallback(
       (value: FilterValuesType) => {
-        dispatch(changeTodoFilterAC(id, value))
+        dispatch(todoActions.changeTodoFilter({ newValue: value, todoId: id }))
       },
       [dispatch, id]
     )
