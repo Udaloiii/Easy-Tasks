@@ -1,14 +1,27 @@
 import { RequestTaskUpdateType, TaskResponseType, tasksApi } from '@/api/tasks-api'
 import { appActions } from '@/store/reducers/app-reducer'
+import { authActions } from '@/store/reducers/auth-reducer'
 import { todoActions } from '@/store/reducers/todo-reducer'
 import { AppMainType } from '@/store/store'
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Dispatch } from 'redux'
 
 export type TasksType = { taskStatus: any } & TaskResponseType // потом заменить any на статус из app-reducer
 export type TaskStateType = {
   [key: string]: TasksType[]
 }
+
+const setTasks = createAsyncThunk('tasks/fetchTasks', async (todoId: string, thunkAPI) => {
+  const { dispatch } = thunkAPI
+
+  dispatch(appActions.setAppStatus({ status: 'loading' }))
+  const res = await tasksApi.getTasks(todoId)
+
+  dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+  dispatch(taskActions.setTasks({ tasks: res.data.items, todoId: todoId }))
+})
+
+export const tasksThunks = { setTasks }
 
 const slice = createSlice({
   extraReducers: builder => {
@@ -23,6 +36,9 @@ const slice = createSlice({
       })
       .addCase(todoActions.deleteTodo, (state, action) => {
         delete state[action.payload.todoId]
+      })
+      .addCase(authActions.setIsLogin, () => {
+        return {}
       })
   },
   initialState: {} as TaskStateType,
