@@ -1,5 +1,6 @@
 import { ResponseGetTodosType, todosApi } from '@/api/todos-api'
 import { appActions } from '@/store/reducers/app-reducer'
+import { authActions } from '@/store/reducers/auth-reducer'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { Dispatch } from 'redux'
 
@@ -9,6 +10,11 @@ export type TodolistType = {
 } & ResponseGetTodosType
 
 const slice = createSlice({
+  extraReducers: builder => {
+    builder.addCase(authActions.setIsLogin, () => {
+      return []
+    })
+  },
   initialState: [] as TodolistType[],
   name: 'todo',
   reducers: {
