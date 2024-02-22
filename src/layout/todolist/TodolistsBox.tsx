@@ -9,7 +9,7 @@ import { Loader } from '@/components/loader/Loader'
 import { Tooltip } from '@/components/tooltip/Tooltip'
 import { Todolist } from '@/layout/todolist/Todolist'
 import { AppStatusType } from '@/store/reducers/app-reducer'
-import { logOutTC } from '@/store/reducers/auth-reducer'
+import { authMeTC, logOutTC } from '@/store/reducers/auth-reducer'
 import { TaskStateType } from '@/store/reducers/task-reducer'
 import { TodolistType, addTodoTC, setTodoTC } from '@/store/reducers/todo-reducer'
 import { AppMainType, useAppDispatch } from '@/store/store'
@@ -30,57 +30,58 @@ export const TodolistsBox: FC = () => {
 
   useEffect(() => {
     isLoggedIn && dispatch(setTodoTC())
-  }, [dispatch, isLoggedIn])
-
-  // useEffect(() => {
-  //   console.log('AUTH REQUEST')
-  //   !username && dispatch(authMeTC())
-  // }, [dispatch, username])
+    !username &&
+      setTimeout(() => {
+        dispatch(authMeTC())
+      }, 1000)
+  }, [dispatch, username, isLoggedIn])
 
   if (!isLoggedIn) {
     return <Navigate to={'/login'} />
   }
 
   return (
-    <>
-      <WrapForUserInfo>
-        <WrapUserInfo>
-          <UserPhoto src={userAvatar} />
-          <Tooltip text={'да, это ты :)'}>
-            <UserName>{username}</UserName>
-          </Tooltip>
-        </WrapUserInfo>
-        <CustomButton
-          color={'royalblue'}
-          heightIcon={'35px'}
-          iconId={'logout'}
-          onClick={logout}
-          title={'logout'}
-          widthIcon={'35px'}
-        />
-      </WrapForUserInfo>
-      <FormWrap>
-        <AddItemForm onClick={addTodolist} placeholder={'create you todolist'} />
-      </FormWrap>
-      {<AnimatePresence>{appStatus === 'loading' && <Loader />}</AnimatePresence>}
-      <TodoWrap>
-        <AnimatePresence>
-          {todos.map(el => {
-            const allTodolistTasks = tasks[el.id]
+    username && (
+      <>
+        <WrapForUserInfo>
+          <WrapUserInfo>
+            <UserPhoto src={userAvatar} />
+            <Tooltip text={'да, это ты :)'}>
+              <UserName>{username}</UserName>
+            </Tooltip>
+          </WrapUserInfo>
+          <CustomButton
+            color={'royalblue'}
+            heightIcon={'35px'}
+            iconId={'logout'}
+            onClick={logout}
+            title={'logout'}
+            widthIcon={'35px'}
+          />
+        </WrapForUserInfo>
+        <FormWrap>
+          <AddItemForm onClick={addTodolist} placeholder={'create you todolist'} />
+        </FormWrap>
+        {<AnimatePresence>{appStatus === 'loading' && <Loader />}</AnimatePresence>}
+        <TodoWrap>
+          <AnimatePresence>
+            {todos.map(el => {
+              const allTodolistTasks = tasks[el.id]
 
-            return (
-              <Todolist
-                filter={el.filter}
-                id={el.id}
-                key={el.id}
-                tasks={allTodolistTasks}
-                title={el.title}
-              />
-            )
-          })}
-        </AnimatePresence>
-      </TodoWrap>
-    </>
+              return (
+                <Todolist
+                  filter={el.filter}
+                  id={el.id}
+                  key={el.id}
+                  tasks={allTodolistTasks}
+                  title={el.title}
+                />
+              )
+            })}
+          </AnimatePresence>
+        </TodoWrap>
+      </>
+    )
   )
 }
 const WrapForUserInfo = styled.div`
