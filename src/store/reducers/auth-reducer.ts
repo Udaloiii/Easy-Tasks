@@ -23,7 +23,7 @@ export const authActions = slice.actions // экспорт сразу 2 экше
 
 // Thunks
 
-export const authMeTC = createAsyncThunk('auth/authMe', async (_arg, thunkAPI) => {
+const authMe = createAsyncThunk('auth/authMe', async (_arg, thunkAPI) => {
   const { dispatch } = thunkAPI
 
   dispatch(appActions.setAppStatus({ status: 'loading' }))
@@ -41,7 +41,7 @@ export const authMeTC = createAsyncThunk('auth/authMe', async (_arg, thunkAPI) =
     dispatch(authActions.setIsLogin({ isLoggedIn: false }))
   }
 })
-export const loginTC = createAsyncThunk('auth/login', async (form: RequestLogInType, thunkAPI) => {
+const logIn = createAsyncThunk('auth/login', async (form: RequestLogInType, thunkAPI) => {
   const { dispatch } = thunkAPI
 
   dispatch(appActions.setAppStatus({ status: 'loading' }))
@@ -56,7 +56,7 @@ export const loginTC = createAsyncThunk('auth/login', async (form: RequestLogInT
     dispatch(appActions.setAppStatus({ status: 'failed' }))
   }
 })
-export const logOutTC = createAsyncThunk('auth/logout', async (_arg, thunkAPI) => {
+const logOut = createAsyncThunk('auth/logout', async (_arg, thunkAPI) => {
   const { dispatch } = thunkAPI
 
   dispatch(appActions.setAppStatus({ status: 'loading' }))
@@ -66,6 +66,7 @@ export const logOutTC = createAsyncThunk('auth/logout', async (_arg, thunkAPI) =
     if (res.data.resultCode === 0) {
       dispatch(authActions.setIsLogin({ isLoggedIn: false }))
       dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+      dispatch(authActions.setUserName({ name: '' }))
     } else {
       dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       dispatch(appActions.setAppError({ error: res.data.messages[0] }))
@@ -76,6 +77,7 @@ export const logOutTC = createAsyncThunk('auth/logout', async (_arg, thunkAPI) =
   }
 })
 
+export const authThunks = { authMe, logIn, logOut }
 // export const _authMeTC = () => (dispatch: Dispatch) => {
 //   dispatch(appActions.setAppStatus({ status: 'loading' }))
 //   authApi
