@@ -4,7 +4,7 @@ import { TaskStatuses } from '@/api/tasks-api'
 import { Checkbox } from '@/components/checkbox/Checkbox'
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { EditableSpan } from '@/components/editableSpan/EditableSpan'
-import { deleteTaskTC, updateTaskTC } from '@/store/reducers/task-reducer'
+import { tasksThunks } from '@/store/reducers/task-reducer'
 import { useAppDispatch } from '@/store/store'
 import { motion } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
@@ -21,16 +21,21 @@ export const Task: FC<TaskPropsType> = memo(({ id, isDone, title, todoId }: Task
 
   const updateTaskStatus = useCallback(
     (status: TaskStatuses) => {
-      dispatch(updateTaskTC(todoId, id, { status }))
+      // dispatch(updateTaskTC(todoId, id, { status }))
+      dispatch(tasksThunks.updateTask({ domainModel: { status }, taskId: id, todoId: todoId }))
     },
     [dispatch, id, todoId]
   )
 
   const changeTaskTitle = useCallback(
-    (title: string) => dispatch(updateTaskTC(todoId, id, { title })),
+    (title: string) =>
+      dispatch(tasksThunks.updateTask({ domainModel: { title }, taskId: id, todoId: todoId })),
     [dispatch, id, todoId]
   )
-  const removeTask = useCallback(() => dispatch(deleteTaskTC(todoId, id)), [dispatch, id, todoId])
+  const removeTask = useCallback(
+    () => dispatch(tasksThunks.deleteTask({ taskId: id, todoId: todoId })),
+    [dispatch, id, todoId]
+  )
 
   return (
     <Container

@@ -8,7 +8,7 @@ import background from '@/assets/images/background-login.webp'
 import { Checkbox } from '@/components/checkbox/Checkbox'
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { CustomInput } from '@/components/customInput/CustomInput'
-import { loginTC } from '@/store/reducers/auth-reducer'
+import { authThunks } from '@/store/reducers/auth-reducer'
 import { AppMainType, useAppDispatch } from '@/store/store'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
@@ -23,7 +23,7 @@ export const Login: FC = () => {
   } = useForm<RequestLogInType>()
 
   const onSubmit = (data: RequestLogInType) => {
-    dispatch(loginTC(data))
+    dispatch(authThunks.logIn(data))
     reset()
   }
   const emailRegex =

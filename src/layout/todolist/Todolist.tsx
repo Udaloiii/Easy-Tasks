@@ -6,13 +6,8 @@ import { CustomButton } from '@/components/customButton/CustomButton'
 import { EditableSpan } from '@/components/editableSpan/EditableSpan'
 import { Task } from '@/layout/Task/Task'
 import { ButtonFilter } from '@/layout/todolist/buttonFilter/ButtonFilter'
-import { TasksType, addTaskTC, setTasksTC } from '@/store/reducers/task-reducer'
-import {
-  FilterValuesType,
-  deleteTodoTC,
-  todoActions,
-  updateTodoTitleTC,
-} from '@/store/reducers/todo-reducer'
+import { TasksType, tasksThunks } from '@/store/reducers/task-reducer'
+import { FilterValuesType, todoActions, todoThunks } from '@/store/reducers/todo-reducer'
 import { useAppDispatch } from '@/store/store'
 import { AnimatePresence, motion } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
@@ -39,16 +34,17 @@ export const Todolist: FC<TodolistPropsType> = memo(
     // functions
     const addTask = useCallback(
       (title: string) => {
-        dispatch(addTaskTC(id, title))
+        // dispatch(addTaskTC(id, title))
+        dispatch(tasksThunks.addTask({ title: title, todoId: id }))
       },
       [dispatch, id]
     )
 
     const changeTodoTitle = useCallback(
-      (title: string) => dispatch(updateTodoTitleTC(id, title)),
+      (title: string) => dispatch(todoThunks.updateTodoTitle({ newTitle: title, todoId: id })),
       [dispatch, id]
     )
-    const removeTodo = useCallback(() => dispatch(deleteTodoTC(id)), [dispatch, id])
+    const removeTodo = useCallback(() => dispatch(todoThunks.deleteTodo(id)), [dispatch, id])
 
     const changeFilterTodo = useCallback(
       (value: FilterValuesType) => {
@@ -58,7 +54,7 @@ export const Todolist: FC<TodolistPropsType> = memo(
     )
 
     useEffect(() => {
-      dispatch(setTasksTC(id))
+      dispatch(tasksThunks.setTasks(id))
     }, [dispatch, id])
 
     console.log('TODO is render')

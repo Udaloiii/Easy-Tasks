@@ -9,9 +9,9 @@ import { Loader } from '@/components/loader/Loader'
 import { Tooltip } from '@/components/tooltip/Tooltip'
 import { Todolist } from '@/layout/todolist/Todolist'
 import { AppStatusType } from '@/store/reducers/app-reducer'
-import { authMeTC, logOutTC } from '@/store/reducers/auth-reducer'
+import { authThunks } from '@/store/reducers/auth-reducer'
 import { TaskStateType } from '@/store/reducers/task-reducer'
-import { TodolistType, addTodoTC, setTodoTC } from '@/store/reducers/todo-reducer'
+import { TodolistType, todoThunks } from '@/store/reducers/todo-reducer'
 import { AppMainType, useAppDispatch } from '@/store/store'
 import { AnimatePresence } from 'framer-motion'
 // eslint-disable-next-line import/no-named-as-default
@@ -25,15 +25,18 @@ export const TodolistsBox: FC = () => {
   const tasks = useSelector<AppMainType, TaskStateType>(state => state.task)
   const dispatch = useAppDispatch()
 
-  const addTodolist = useCallback((title: string) => dispatch(addTodoTC(title)), [dispatch])
-  const logout = useCallback(() => dispatch(logOutTC()), [dispatch])
+  const addTodolist = useCallback(
+    (title: string) => dispatch(todoThunks.addTodo(title)),
+    [dispatch]
+  )
+  const logout = useCallback(() => dispatch(authThunks.logOut()), [dispatch])
 
   useEffect(() => {
-    isLoggedIn && dispatch(setTodoTC())
+    isLoggedIn && dispatch(todoThunks.setTodo())
     !username &&
       setTimeout(() => {
-        dispatch(authMeTC())
-      }, 1000)
+        dispatch(authThunks.authMe())
+      }, 0)
   }, [dispatch, username, isLoggedIn])
 
   if (!isLoggedIn) {
