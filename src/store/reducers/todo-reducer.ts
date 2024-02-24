@@ -1,7 +1,7 @@
 import { ResponseGetTodosType, todosApi } from '@/api/todos-api'
 import { appActions } from '@/store/reducers/app-reducer'
 import { authActions } from '@/store/reducers/auth-reducer'
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Dispatch } from 'redux'
 
 export type FilterValuesType = 'active' | 'all' | 'completed'
@@ -55,8 +55,86 @@ export const todoReducer = slice.reducer
 export const todoActions = slice.actions
 
 // THUNKS
+const setTodo = createAsyncThunk('todo/setTodo', async (_arg, thunkAPI) => {
+  const { dispatch } = thunkAPI
 
-export const setTodoTC = () => (dispatch: Dispatch) => {
+  dispatch(appActions.setAppStatus({ status: 'loading' }))
+  const res = await todosApi.getTodo()
+
+  try {
+    dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+    dispatch(todoActions.setTodos({ todolists: res.data }))
+  } catch (err) {
+    dispatch(appActions.setAppStatus({ status: 'failed' }))
+    dispatch(appActions.setAppError({ error: (err as Error).message }))
+  }
+})
+const addTodo = createAsyncThunk('todo/addTodo', async (title: string, thunkAPI) => {
+  const { dispatch } = thunkAPI
+
+  dispatch(appActions.setAppStatus({ status: 'loading' }))
+  const res = await todosApi.addTodo(title)
+
+  try {
+    if (res.data.resultCode === 0) {
+      dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+      dispatch(todoActions.addTodo({ todo: res.data.data.item }))
+      dispatch(appActions.setAppInfo({ info: 'todo is added' }))
+    } else {
+      dispatch(appActions.setAppError({ error: res.data.messages[0] }))
+      dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+    }
+  } catch (err) {
+    dispatch(appActions.setAppStatus({ status: 'failed' }))
+    dispatch(appActions.setAppError({ error: (err as Error).message }))
+  }
+})
+const deleteTodo = createAsyncThunk('todo/deleteTodo', async (todoId: string, thunkAPI) => {
+  const { dispatch } = thunkAPI
+
+  dispatch(appActions.setAppStatus({ status: 'loading' }))
+  await todosApi.deleteTodo(todoId)
+
+  try {
+    dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+    dispatch(todoActions.deleteTodo({ todoId }))
+    dispatch(appActions.setAppInfo({ info: 'todo is deleted' }))
+  } catch (err) {
+    dispatch(appActions.setAppStatus({ status: 'failed' }))
+    dispatch(appActions.setAppError({ error: (err as Error).message }))
+  }
+})
+const updateTodoTitle = createAsyncThunk(
+  'todo/updateTodoTitle',
+  async ({ newTitle, todoId }: { newTitle: string; todoId: string }, thunkAPI) => {
+    const { dispatch } = thunkAPI
+
+    dispatch(appActions.setAppStatus({ status: 'loading' }))
+    await todosApi.changeTodoTitle(todoId, newTitle)
+
+    try {
+      dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+      dispatch(todoActions.changeTodoTitle({ newTitle, todoId }))
+      dispatch(appActions.setAppInfo({ info: 'title is updated' }))
+    } catch (err) {
+      dispatch(appActions.setAppStatus({ status: 'failed' }))
+      dispatch(appActions.setAppError({ error: (err as Error).message }))
+    }
+  }
+)
+
+export const todoThunks = { addTodo, deleteTodo, setTodo, updateTodoTitle }
+
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+// -----------------------------------------------------
+// это можно будет потом удалить
+export const _setTodoTC = () => (dispatch: Dispatch) => {
   // dispatch(appActions.setAppError({ error: null }))
   dispatch(appActions.setAppStatus({ status: 'loading' }))
   todosApi
@@ -70,7 +148,7 @@ export const setTodoTC = () => (dispatch: Dispatch) => {
       dispatch(appActions.setAppError({ error: err.message }))
     })
 }
-export const addTodoTC = (title: string) => (dispatch: Dispatch) => {
+export const _addTodoTC = (title: string) => (dispatch: Dispatch) => {
   dispatch(appActions.setAppStatus({ status: 'loading' }))
   // dispatch(appActions.setAppError({ error: null }))
   todosApi
@@ -91,7 +169,7 @@ export const addTodoTC = (title: string) => (dispatch: Dispatch) => {
     })
 }
 
-export const deleteTodoTC = (todoId: string) => (dispatch: Dispatch) => {
+export const _deleteTodoTC = (todoId: string) => (dispatch: Dispatch) => {
   dispatch(appActions.setAppStatus({ status: 'loading' }))
   // dispatch(appActions.setAppError({ error: null }))
   todosApi
@@ -107,7 +185,7 @@ export const deleteTodoTC = (todoId: string) => (dispatch: Dispatch) => {
     })
 }
 
-export const updateTodoTitleTC = (todoId: string, newTitle: string) => (dispatch: Dispatch) => {
+export const _updateTodoTitleTC = (todoId: string, newTitle: string) => (dispatch: Dispatch) => {
   dispatch(appActions.setAppStatus({ status: 'loading' }))
   // dispatch(appActions.setAppError({ error: null }))
   todosApi
