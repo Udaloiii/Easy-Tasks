@@ -83,9 +83,10 @@ const setTodo = createAppAsyncThunk('todo/setTodo', async (_arg, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
 
   dispatch(appActions.setAppStatus({ status: 'loading' }))
-  const res = await todosApi.getTodo()
 
   try {
+    const res = await todosApi.getTodo()
+
     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
     // dispatch(todoActions.setTodos({ todolists: res.data }))
 
@@ -102,9 +103,10 @@ const addTodo = createAppAsyncThunk('todo/addTodo', async (title: string, thunkA
   const { dispatch, rejectWithValue } = thunkAPI
 
   dispatch(appActions.setAppStatus({ status: 'loading' }))
-  const res = await todosApi.addTodo(title)
 
   try {
+    const res = await todosApi.addTodo(title)
+
     if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       dispatch(appActions.setAppInfo({ info: 'todo is added' }))
@@ -130,9 +132,10 @@ const deleteTodo = createAppAsyncThunk('todo/deleteTodo', async (todoId: string,
   const { dispatch, rejectWithValue } = thunkAPI
 
   dispatch(appActions.setAppStatus({ status: 'loading' }))
-  const res = await todosApi.deleteTodo(todoId)
 
   try {
+    const res = await todosApi.deleteTodo(todoId)
+
     if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       dispatch(appActions.setAppInfo({ info: 'todo is deleted' }))
@@ -158,9 +161,10 @@ const updateTodoTitle = createAppAsyncThunk(
     const { dispatch, rejectWithValue } = thunkAPI
 
     dispatch(appActions.setAppStatus({ status: 'loading' }))
-    const res = await todosApi.changeTodoTitle(todoId, newTitle)
 
     try {
+      const res = await todosApi.changeTodoTitle(todoId, newTitle)
+
       if (res.data.resultCode === ResultCode.Success) {
         dispatch(appActions.setAppStatus({ status: 'succeeded' }))
         dispatch(appActions.setAppInfo({ info: 'title is updated' }))
