@@ -38,18 +38,18 @@ export const Snackbar: FC = memo(() => {
 
   return (
     <AnimatePresence>
-      {(error || info) && (
-        <SendInfo
-          animate={conditionVisible ? 'visible' : 'exit'}
-          error={error}
-          exit={'exit'}
-          initial={'hidden'}
-          transition={transition}
-          variants={variants}
-        >
-          {error || info}
-        </SendInfo>
-      )}
+      {/*{(error || info) && (*/}
+      <SendInfo
+        animate={conditionVisible ? 'visible' : 'exit'}
+        error={error}
+        exit={'exit'}
+        initial={'hidden'}
+        transition={transition}
+        variants={variants}
+      >
+        {error || info}
+      </SendInfo>
+      ){/*}*/}
     </AnimatePresence>
   )
 })
