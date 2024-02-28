@@ -6,6 +6,7 @@ import { todoThunks } from '@/store/reducers/todo-reducer'
 import { createAppAsyncThunk } from '@/utils/create-app-async-thunk'
 import { handleServerAppError } from '@/utils/handle-server-app-error'
 import { handleServerNetworkError } from '@/utils/handle-server-network-error'
+import { thunkTryCatch } from '@/utils/thunk-try-catch'
 import { createSlice } from '@reduxjs/toolkit'
 
 export type TasksType = { taskStatus: any } & TaskResponseType // потом заменить any на статус из app-reducer
@@ -97,26 +98,39 @@ export const addTask = createAppAsyncThunk<
 >('tasks/addTask', async ({ title, todoId }, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
 
-  dispatch(appActions.setAppStatus({ status: 'loading' }))
+  // dispatch(appActions.setAppStatus({ status: 'loading' }))
 
-  try {
+  return thunkTryCatch(thunkAPI, async () => {
     const res = await tasksApi.addTask(todoId, title)
 
     if (res.data.resultCode === ResultCode.Success) {
-      dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-      dispatch(appActions.setAppInfo({ info: 'task is added' }))
+      const task = res.data.data.item
 
-      return { task: res.data.data.item, todoId: todoId }
+      return { task }
     } else {
       handleServerAppError(res.data, dispatch)
 
-      return rejectWithValue(null) // пока так
+      return rejectWithValue(null)
     }
-  } catch (err) {
-    handleServerNetworkError(err, dispatch)
-
-    return rejectWithValue(null) // пока так
-  }
+  })
+  // try {
+  //   const res = await tasksApi.addTask(todoId, title)
+  //
+  //   if (res.data.resultCode === ResultCode.Success) {
+  //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+  //     dispatch(appActions.setAppInfo({ info: 'task is added' }))
+  //
+  //     return { task: res.data.data.item, todoId: todoId }
+  //   } else {
+  //     handleServerAppError(res.data, dispatch)
+  //
+  //     return rejectWithValue(null) // пока так
+  //   }
+  // } catch (err) {
+  //   handleServerNetworkError(err, dispatch)
+  //
+  //   return rejectWithValue(null) // пока так
+  // }
 })
 
 const updateTask = createAppAsyncThunk<
