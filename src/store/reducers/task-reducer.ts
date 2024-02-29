@@ -118,9 +118,9 @@ export const addTask = createAppAsyncThunk<
   //
   //   if (res.data.resultCode === ResultCode.Success) {
   //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-  //     dispatch(appActions.setAppInfo({ info: 'task is added' }))
+  //     dispatch(appActions.setAppInfo({ info: 'tasks is added' }))
   //
-  //     return { task: res.data.data.item, todoId: todoId }
+  //     return { tasks: res.data.data.item, todoId: todoId }
   //   } else {
   //     handleServerAppError(res.data, dispatch)
   //
@@ -142,7 +142,7 @@ const updateTask = createAppAsyncThunk<
   const task = state.task[todoId].find(t => t.id === taskId)
 
   if (!task) {
-    dispatch(appActions.setAppError({ error: 'Task not found' }))
+    dispatch(appActions.setAppError({ error: 'tasks not found' }))
 
     return rejectWithValue(null)
   }
@@ -157,14 +157,13 @@ const updateTask = createAppAsyncThunk<
     ...domainModel,
   }
 
-  dispatch(appActions.setAppStatus({ status: 'loading' }))
-
-  try {
+  // dispatch(appActions.setAppStatus({ status: 'loading' }))
+  return thunkTryCatch(thunkAPI, async () => {
     const res = await tasksApi.updateTask(todoId, taskId, apiModel)
 
     if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-      dispatch(appActions.setAppInfo({ info: 'task is updated' }))
+      dispatch(appActions.setAppInfo({ info: 'tasks is updated' }))
 
       return { task: domainModel, taskId: taskId, todoId: todoId }
     } else {
@@ -172,11 +171,25 @@ const updateTask = createAppAsyncThunk<
 
       return rejectWithValue(null)
     }
-  } catch (err) {
-    handleServerNetworkError(err, dispatch)
-
-    return rejectWithValue(null)
-  }
+  })
+  // try {
+  //   const res = await tasksApi.updateTask(todoId, taskId, apiModel)
+  //
+  //   if (res.data.resultCode === ResultCode.Success) {
+  //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+  //     dispatch(appActions.setAppInfo({ info: 'tasks is updated' }))
+  //
+  //     return { tasks: domainModel, taskId: taskId, todoId: todoId }
+  //   } else {
+  //     handleServerAppError(res.data, dispatch)
+  //
+  //     return rejectWithValue(null)
+  //   }
+  // } catch (err) {
+  //   handleServerNetworkError(err, dispatch)
+  //
+  //   return rejectWithValue(null)
+  // }
 })
 
 const deleteTask = createAppAsyncThunk<
@@ -185,14 +198,13 @@ const deleteTask = createAppAsyncThunk<
 >('tasks/deleteTask', async ({ taskId, todoId }, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
 
-  dispatch(appActions.setAppStatus({ status: 'loading' }))
-
-  try {
+  // dispatch(appActions.setAppStatus({ status: 'loading' }))
+  return thunkTryCatch(thunkAPI, async () => {
     const res = await tasksApi.deleteTask(todoId, taskId)
 
     if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-      dispatch(appActions.setAppInfo({ info: 'task is deleted' }))
+      dispatch(appActions.setAppInfo({ info: 'tasks is deleted' }))
 
       return { taskId, todoId }
     } else {
@@ -200,11 +212,25 @@ const deleteTask = createAppAsyncThunk<
 
       return rejectWithValue(null)
     }
-  } catch (err) {
-    handleServerNetworkError(err, dispatch)
-
-    return rejectWithValue(null)
-  }
+  })
+  // try {
+  //   const res = await tasksApi.deleteTask(todoId, taskId)
+  //
+  //   if (res.data.resultCode === ResultCode.Success) {
+  //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+  //     dispatch(appActions.setAppInfo({ info: 'tasks is deleted' }))
+  //
+  //     return { taskId, todoId }
+  //   } else {
+  //     handleServerAppError(res.data, dispatch)
+  //
+  //     return rejectWithValue(null)
+  //   }
+  // } catch (err) {
+  //   handleServerNetworkError(err, dispatch)
+  //
+  //   return rejectWithValue(null)
+  // }
 })
 
 export const tasksThunks = { addTask, deleteTask, setTasks, updateTask }

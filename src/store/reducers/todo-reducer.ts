@@ -5,6 +5,7 @@ import { authActions } from '@/store/reducers/auth-reducer'
 import { createAppAsyncThunk } from '@/utils/create-app-async-thunk'
 import { handleServerAppError } from '@/utils/handle-server-app-error'
 import { handleServerNetworkError } from '@/utils/handle-server-network-error'
+import { thunkTryCatch } from '@/utils/thunk-try-catch'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export type FilterValuesType = 'active' | 'all' | 'completed'
@@ -88,12 +89,9 @@ const setTodo = createAppAsyncThunk('todo/setTodo', async (_arg, thunkAPI) => {
     const res = await todosApi.getTodo()
 
     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-    // dispatch(todoActions.setTodos({ todolists: res.data }))
 
     return { todolists: res.data }
   } catch (err) {
-    // dispatch(appActions.setAppStatus({ status: 'failed' }))
-    // dispatch(appActions.setAppError({ error: err.message }))
     handleServerNetworkError(err, dispatch)
 
     return rejectWithValue(null)
@@ -102,44 +100,50 @@ const setTodo = createAppAsyncThunk('todo/setTodo', async (_arg, thunkAPI) => {
 const addTodo = createAppAsyncThunk('todo/addTodo', async (title: string, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
 
-  dispatch(appActions.setAppStatus({ status: 'loading' }))
-
-  try {
+  // dispatch(appActions.setAppStatus({ status: 'loading' }))
+  return thunkTryCatch(thunkAPI, async () => {
     const res = await todosApi.addTodo(title)
 
     if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       dispatch(appActions.setAppInfo({ info: 'todo is added' }))
 
-      // dispatch(todoActions.addTodo({ todo: res.data.data.item }))
       return { todo: res.data.data.item }
     } else {
-      // dispatch(appActions.setAppError({ error: res.data.messages[0] }))
-      // dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       handleServerAppError(res.data, dispatch)
 
       return rejectWithValue(null)
     }
-  } catch (err) {
-    // dispatch(appActions.setAppStatus({ status: 'failed' }))
-    // dispatch(appActions.setAppError({ error: (err as Error).message }))
-    handleServerNetworkError(err, dispatch)
-
-    return rejectWithValue(null)
-  }
+  })
+  // try {
+  //   const res = await todosApi.addTodo(title)
+  //
+  //   if (res.data.resultCode === ResultCode.Success) {
+  //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+  //     dispatch(appActions.setAppInfo({ info: 'todo is added' }))
+  //
+  //     return { todo: res.data.data.item }
+  //   } else {
+  //     handleServerAppError(res.data, dispatch)
+  //
+  //     return rejectWithValue(null)
+  //   }
+  // } catch (err) {
+  //   handleServerNetworkError(err, dispatch)
+  //
+  //   return rejectWithValue(null)
+  // }
 })
 const deleteTodo = createAppAsyncThunk('todo/deleteTodo', async (todoId: string, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI
 
-  dispatch(appActions.setAppStatus({ status: 'loading' }))
-
-  try {
+  // dispatch(appActions.setAppStatus({ status: 'loading' }))
+  return thunkTryCatch(thunkAPI, async () => {
     const res = await todosApi.deleteTodo(todoId)
 
     if (res.data.resultCode === ResultCode.Success) {
       dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       dispatch(appActions.setAppInfo({ info: 'todo is deleted' }))
-      // dispatch(todoActions.deleteTodo({ todoId }))
 
       return { todoId }
     } else {
@@ -147,42 +151,65 @@ const deleteTodo = createAppAsyncThunk('todo/deleteTodo', async (todoId: string,
 
       return rejectWithValue(null)
     }
-  } catch (err) {
-    // dispatch(appActions.setAppStatus({ status: 'failed' }))
-    // dispatch(appActions.setAppError({ error: (err as Error).message }))
-    handleServerNetworkError(err, dispatch)
+  })
 
-    return rejectWithValue(null)
-  }
+  // try {
+  //   const res = await todosApi.deleteTodo(todoId)
+  //
+  //   if (res.data.resultCode === ResultCode.Success) {
+  //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+  //     dispatch(appActions.setAppInfo({ info: 'todo is deleted' }))
+  //
+  //     return { todoId }
+  //   } else {
+  //     handleServerAppError(res.data, dispatch)
+  //
+  //     return rejectWithValue(null)
+  //   }
+  // } catch (err) {
+  //   handleServerNetworkError(err, dispatch)
+  //
+  //   return rejectWithValue(null)
+  // }
 })
 const updateTodoTitle = createAppAsyncThunk(
   'todo/updateTodoTitle',
   async ({ newTitle, todoId }: { newTitle: string; todoId: string }, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI
 
-    dispatch(appActions.setAppStatus({ status: 'loading' }))
-
-    try {
+    // dispatch(appActions.setAppStatus({ status: 'loading' }))
+    return thunkTryCatch(thunkAPI, async () => {
       const res = await todosApi.changeTodoTitle(todoId, newTitle)
 
       if (res.data.resultCode === ResultCode.Success) {
         dispatch(appActions.setAppStatus({ status: 'succeeded' }))
         dispatch(appActions.setAppInfo({ info: 'title is updated' }))
 
-        // dispatch(todoActions.changeTodoTitle({ newTitle, todoId }))
         return { newTitle, todoId }
       } else {
         handleServerAppError(res.data, dispatch)
 
         return rejectWithValue(null)
       }
-    } catch (err) {
-      // dispatch(appActions.setAppStatus({ status: 'failed' }))
-      // dispatch(appActions.setAppError({ error: (err as Error).message }))
-      handleServerNetworkError(err, dispatch)
-
-      return rejectWithValue(null)
-    }
+    })
+    // try {
+    //   const res = await todosApi.changeTodoTitle(todoId, newTitle)
+    //
+    //   if (res.data.resultCode === ResultCode.Success) {
+    //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
+    //     dispatch(appActions.setAppInfo({ info: 'title is updated' }))
+    //
+    //     return { newTitle, todoId }
+    //   } else {
+    //     handleServerAppError(res.data, dispatch)
+    //
+    //     return rejectWithValue(null)
+    //   }
+    // } catch (err) {
+    //   handleServerNetworkError(err, dispatch)
+    //
+    //   return rejectWithValue(null)
+    // }
   }
 )
 
