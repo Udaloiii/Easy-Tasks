@@ -24,7 +24,6 @@ const StyleButton = styled.button<{ active: boolean; title?: FilterValuesType }>
   font-weight: bold;
   border: none;
   border-radius: 14px;
-  //background: #000000;
   background: ${props => (props.active ? 'transparent' : '#000000')};
   padding: 0;
 
