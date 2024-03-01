@@ -21,7 +21,6 @@ export const Task: FC<TaskPropsType> = memo(({ id, isDone, title, todoId }: Task
 
   const updateTaskStatus = useCallback(
     (status: TaskStatuses) => {
-      // dispatch(updateTaskTC(todoId, id, { status }))
       dispatch(tasksThunks.updateTask({ domainModel: { status }, taskId: id, todoId: todoId }))
     },
     [dispatch, id, todoId]

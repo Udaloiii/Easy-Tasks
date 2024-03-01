@@ -4,8 +4,8 @@ import { TaskStatuses } from '@/api/tasks-api'
 import { AddItemForm } from '@/components/addItemForm/AddItemForm'
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { EditableSpan } from '@/components/editableSpan/EditableSpan'
-import { Task } from '@/layout/Task/Task'
-import { ButtonFilter } from '@/layout/todolist/buttonFilter/ButtonFilter'
+import { TasksBox } from '@/layout/tasks/TasksBox'
+import { ButtonsFilterBox } from '@/layout/todolist/buttonsFilterBox/ButtonsFilterBox'
 import { TasksType, tasksThunks } from '@/store/reducers/task-reducer'
 import { FilterValuesType, todoActions, todoThunks } from '@/store/reducers/todo-reducer'
 import { useAppDispatch } from '@/store/store'
@@ -34,7 +34,6 @@ export const Todolist: FC<TodolistPropsType> = memo(
     // functions
     const addTask = useCallback(
       (title: string) => {
-        // dispatch(addTaskTC(id, title))
         dispatch(tasksThunks.addTask({ title: title, todoId: id }))
       },
       [dispatch, id]
@@ -56,8 +55,6 @@ export const Todolist: FC<TodolistPropsType> = memo(
     useEffect(() => {
       dispatch(tasksThunks.setTasks(id))
     }, [dispatch, id])
-
-    console.log('TODO is render')
 
     return (
       <Container
@@ -93,28 +90,14 @@ export const Todolist: FC<TodolistPropsType> = memo(
           <AddItemForm
             onClick={addTask}
             padding={'8px'}
-            placeholder={'create you task'}
+            placeholder={'create you tasks'}
             width={'90%'}
           />
           <span></span>
           <AnimatePresence>
-            <WrapForTasks>
-              {filteredTask.map(task => (
-                <Task
-                  id={task.id}
-                  isDone={task.status === 2}
-                  key={task.id}
-                  title={task.title}
-                  todoId={id}
-                />
-              ))}
-            </WrapForTasks>
+            <TasksBox tasks={filteredTask} todoId={id} />
           </AnimatePresence>
-          <ButtonsWrap>
-            <ButtonFilter filter={filter} onClick={changeFilterTodo} title={'all'} />
-            <ButtonFilter filter={filter} onClick={changeFilterTodo} title={'active'} />
-            <ButtonFilter filter={filter} onClick={changeFilterTodo} title={'completed'} />
-          </ButtonsWrap>
+          <ButtonsFilterBox filter={filter} onClick={changeFilterTodo} />
         </>
       </Container>
     )
@@ -174,18 +157,4 @@ const WrapRemoveTodoBtn = styled.div`
   svg {
     color: rgba(128, 128, 128, 0.2);
   }
-`
-
-const WrapForTasks = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`
-
-const ButtonsWrap = styled.div`
-  padding: 20px 0 15px;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
 `
