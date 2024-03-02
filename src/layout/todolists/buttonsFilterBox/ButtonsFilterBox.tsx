@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { ButtonFilter } from '@/layout/todolist/buttonsFilterBox/buttonFilter/ButtonFilter'
+import { ButtonFilter } from '@/layout/todolists/buttonsFilterBox/buttonFilter/ButtonFilter'
 import { FilterValuesType } from '@/store/reducers/todo-reducer'
 // eslint-disable-next-line import/no-named-as-default
 import styled from 'styled-components'
