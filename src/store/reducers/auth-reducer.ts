@@ -44,7 +44,6 @@ const authMe = createAppAsyncThunk<{ isLoggedIn: boolean }>(
   async (_arg, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI
 
-    // dispatch(appActions.setAppStatus({ status: 'loading' }))
     return thunkTryCatch(thunkAPI, async () => {
       const res = await authApi.authMe() // если вне блока try, то не обрабатывается ошибка и крутилка бесконечно
 
@@ -61,28 +60,6 @@ const authMe = createAppAsyncThunk<{ isLoggedIn: boolean }>(
     }).finally(() => {
       dispatch(appActions.setAppInitialized({ isInitialized: true })) // пересмотреть
     })
-
-    // try {
-    //   const res = await authApi.authMe() // если вне блока try, то не обрабатывается ошибка и крутилка бесконечно
-    //
-    //   if (res.data.resultCode === ResultCode.Success) {
-    //     dispatch(authActions.setUserName({ name: res.data.data.login }))
-    //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-    //
-    //     return { isLoggedIn: true }
-    //   } else {
-    //     handleServerAppError(res.data, dispatch)
-    //
-    //     return rejectWithValue(null)
-    //   }
-    // } catch (err) {
-    //   handleServerNetworkError(err, dispatch)
-    //
-    //   return rejectWithValue(null)
-    // }
-    // finally {
-    //   dispatch(appActions.setAppInitialized({ isInitialized: true }))
-    // }
   }
 )
 const logIn = createAppAsyncThunk<{ isLoggedIn: true }, RequestLogInType>(
@@ -90,7 +67,6 @@ const logIn = createAppAsyncThunk<{ isLoggedIn: true }, RequestLogInType>(
   async (form, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI
 
-    // dispatch(appActions.setAppStatus({ status: 'loading' }))
     return thunkTryCatch(thunkAPI, async () => {
       const res = await authApi.logIn(form) // если вне блока try, то не обрабатывается ошибка и крутилка бесконечно
 
@@ -104,23 +80,6 @@ const logIn = createAppAsyncThunk<{ isLoggedIn: true }, RequestLogInType>(
         return rejectWithValue(null)
       }
     })
-    //   try {
-    //   const res = await authApi.logIn(form) // если вне блока try, то не обрабатывается ошибка и крутилка бесконечно
-    //
-    //   if (res.data.resultCode === ResultCode.Success) {
-    //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-    //
-    //     return { isLoggedIn: true }
-    //   } else {
-    //     handleServerAppError(res.data, dispatch)
-    //
-    //     return rejectWithValue(null)
-    //   }
-    // } catch (err) {
-    //   handleServerNetworkError(err, dispatch)
-    //
-    //   return rejectWithValue(null)
-    // }
   }
 )
 const logOut = createAppAsyncThunk<{ isLoggedIn: boolean }>(
@@ -128,7 +87,6 @@ const logOut = createAppAsyncThunk<{ isLoggedIn: boolean }>(
   async (_arg, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI
 
-    // dispatch(appActions.setAppStatus({ status: 'loading' }))
     return thunkTryCatch(thunkAPI, async () => {
       const res = await authApi.logOut() // если вне блока try, то не обрабатывается ошибка и крутилка бесконечно
 
@@ -143,24 +101,6 @@ const logOut = createAppAsyncThunk<{ isLoggedIn: boolean }>(
         return rejectWithValue(null)
       }
     })
-    // try {
-    //   const res = await authApi.logOut() // если вне блока try, то не обрабатывается ошибка и крутилка бесконечно
-    //
-    //   if (res.data.resultCode === ResultCode.Success) {
-    //     dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-    //     dispatch(authActions.setUserName({ name: '' }))
-    //
-    //     return { isLoggedIn: false }
-    //   } else {
-    //     handleServerAppError(res.data, dispatch)
-    //
-    //     return rejectWithValue(null)
-    //   }
-    // } catch (err) {
-    //   handleServerNetworkError(err, dispatch)
-    //
-    //   return rejectWithValue(null)
-    // }
   }
 )
 
