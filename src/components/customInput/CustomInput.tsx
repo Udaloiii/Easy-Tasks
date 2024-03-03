@@ -20,7 +20,6 @@ type CustomInputPropsType = {
   onchange?: (value: string) => void
   padding?: string
   setError?: (value: null | string) => void
-  // type?: 'email' | 'password' | 'text'
 } & ComponentPropsWithoutRef<'input'>
 
 export const CustomInput = memo(

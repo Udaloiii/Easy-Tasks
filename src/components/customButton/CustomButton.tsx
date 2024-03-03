@@ -26,8 +26,6 @@ export const CustomButton: FC<ButtonPropsType> = memo(
     viewBoxForIcon,
     widthIcon,
   }: ButtonPropsType) => {
-    // console.log('BUTTON RENDER')
-
     return (
       <StyleButton
         animate={{ opacity: 1 }}

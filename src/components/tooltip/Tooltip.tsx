@@ -33,7 +33,6 @@ export const Tooltip = ({ children, text }: TooltipProps) => {
     <TooltipContainer onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       {children}
       <AnimatePresence>
-        K
         {isHovered && (
           <TooltipText
             animate={'visible'}
