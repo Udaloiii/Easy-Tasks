@@ -59,6 +59,12 @@ const WrapForBtn = styled.div`
   top: 5%;
   left: 50%;
   transform: translateX(-50%);
+
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `
 const Text = styled.span`
   font-family: 'Bauhaus 93', sans-serif;
