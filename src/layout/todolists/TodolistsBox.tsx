@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 
-import userAvatar from '@/assets/user.jpg'
+import userAvatar from '@/assets/images/user.jpg'
 import { AddItemForm } from '@/components/addItemForm/AddItemForm'
 import { CustomButton } from '@/components/customButton/CustomButton'
 import { Loader } from '@/components/loader/Loader'
