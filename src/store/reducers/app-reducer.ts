@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, UnknownAction, createSlice } from '@reduxjs/toolkit'
 
 export type AppStatusType = 'failed' | 'idle' | 'loading' | 'succeeded'
 type AppStateType = {
@@ -9,6 +9,33 @@ type AppStateType = {
 }
 
 const slice = createSlice({
+  extraReducers: builder => {
+    builder
+      .addMatcher(
+        (action: UnknownAction) => {
+          return action.type.endsWith('/pending')
+        },
+        state => {
+          state.status = 'loading'
+        }
+      )
+      .addMatcher(
+        (action: UnknownAction) => {
+          return action.type.endsWith('/fulfilled')
+        },
+        state => {
+          state.status = 'succeeded'
+        }
+      )
+      .addMatcher(
+        (action: UnknownAction) => {
+          return action.type.endsWith('/rejected')
+        },
+        state => {
+          state.status = 'failed'
+        }
+      )
+  },
   initialState: {
     error: null,
     info: null,
@@ -26,9 +53,9 @@ const slice = createSlice({
     setAppInitialized: (state, action: PayloadAction<{ isInitialized: boolean }>) => {
       state.isInitialized = action.payload.isInitialized
     },
-    setAppStatus: (state, action: PayloadAction<{ status: AppStatusType }>) => {
-      state.status = action.payload.status
-    },
+    // setAppStatus: (state, action: PayloadAction<{ status: AppStatusType }>) => {
+    //   state.status = action.payload.status
+    // },
   },
 })
 
