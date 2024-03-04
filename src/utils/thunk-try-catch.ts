@@ -1,5 +1,4 @@
 import { MainResponseType } from '@/api/main-instance-api'
-import { appActions } from '@/store/reducers/app-reducer'
 import { AppDispatchType, AppMainType } from '@/store/store'
 import { handleServerNetworkError } from '@/utils/handle-server-network-error'
 
@@ -13,14 +12,11 @@ export const thunkTryCatch = async <T>(
 ): Promise<ReturnType<typeof thunkAPI.rejectWithValue> | T> => {
   const { dispatch, rejectWithValue } = thunkAPI
 
-  dispatch(appActions.setAppStatus({ status: 'loading' }))
   try {
     return await logic()
   } catch (e) {
     handleServerNetworkError(e, dispatch)
 
     return rejectWithValue(null)
-  } finally {
-    dispatch(appActions.setAppStatus({ status: 'idle' }))
   }
 }
