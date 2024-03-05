@@ -25,9 +25,9 @@ const slice = createSlice({
   },
   name: 'auth',
   reducers: {
-    setIsLogin: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-      state.isLogin = action.payload.isLoggedIn
-    },
+    // setIsLogin: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+    //   state.isLogin = action.payload.isLoggedIn
+    // },
     setUserName: (state, action: PayloadAction<{ name: string }>) => {
       state.userName = action.payload.name
     },
@@ -49,7 +49,6 @@ const authMe = createAppAsyncThunk<{ isLoggedIn: boolean }>(
 
       if (res.data.resultCode === ResultCode.Success) {
         dispatch(authActions.setUserName({ name: res.data.data.login }))
-        dispatch(appActions.setAppStatus({ status: 'succeeded' }))
 
         return { isLoggedIn: true }
       } else {
@@ -71,8 +70,6 @@ const logIn = createAppAsyncThunk<{ isLoggedIn: true }, RequestLogInType>(
       const res = await authApi.logIn(form) // если вне блока try, то не обрабатывается ошибка и крутилка бесконечно
 
       if (res.data.resultCode === ResultCode.Success) {
-        dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-
         return { isLoggedIn: true }
       } else {
         handleServerAppError(res.data, dispatch)
@@ -91,7 +88,6 @@ const logOut = createAppAsyncThunk<{ isLoggedIn: boolean }>(
       const res = await authApi.logOut() // если вне блока try, то не обрабатывается ошибка и крутилка бесконечно
 
       if (res.data.resultCode === ResultCode.Success) {
-        dispatch(appActions.setAppStatus({ status: 'succeeded' }))
         dispatch(authActions.setUserName({ name: '' }))
 
         return { isLoggedIn: false }
