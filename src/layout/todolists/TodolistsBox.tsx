@@ -37,54 +37,52 @@ export const TodolistsBox: FC = () => {
       setTimeout(() => {
         dispatch(authThunks.authMe())
       }, 0)
-  }, [dispatch, username, isLoggedIn])
+  }, [dispatch])
 
   if (!isLoggedIn) {
     return <Navigate to={'/login'} />
   }
 
   return (
-    username && (
-      <>
-        <WrapForUserInfo>
-          <WrapUserInfo>
-            <UserPhoto src={userAvatar} />
-            <Tooltip text={'да, это ты :)'}>
-              <UserName>{username}</UserName>
-            </Tooltip>
-          </WrapUserInfo>
-          <CustomButton
-            color={'royalblue'}
-            heightIcon={'35px'}
-            iconId={'logout'}
-            onClick={logout}
-            title={'logout'}
-            widthIcon={'35px'}
-          />
-        </WrapForUserInfo>
-        <FormWrap>
-          <AddItemForm onClick={addTodolist} placeholder={'create you todolist'} />
-        </FormWrap>
-        {<AnimatePresence>{appStatus === 'loading' && <Loader />}</AnimatePresence>}
-        <TodoWrap>
-          <AnimatePresence>
-            {todos.map(el => {
-              const allTodolistTasks = tasks[el.id]
+    <>
+      <WrapForUserInfo>
+        <WrapUserInfo>
+          <UserPhoto src={userAvatar} />
+          <Tooltip text={'да, это ты :)'}>
+            <UserName>{username}</UserName>
+          </Tooltip>
+        </WrapUserInfo>
+        <CustomButton
+          color={'royalblue'}
+          heightIcon={'35px'}
+          iconId={'logout'}
+          onClick={logout}
+          title={'logout'}
+          widthIcon={'35px'}
+        />
+      </WrapForUserInfo>
+      <FormWrap>
+        <AddItemForm onClick={addTodolist} placeholder={'create you todolist'} />
+      </FormWrap>
+      {<AnimatePresence>{appStatus === 'loading' && <Loader />}</AnimatePresence>}
+      <TodoWrap>
+        <AnimatePresence>
+          {todos.map(el => {
+            const allTodolistTasks = tasks[el.id]
 
-              return (
-                <Todolist
-                  filter={el.filter}
-                  id={el.id}
-                  key={el.id}
-                  tasks={allTodolistTasks}
-                  title={el.title}
-                />
-              )
-            })}
-          </AnimatePresence>
-        </TodoWrap>
-      </>
-    )
+            return (
+              <Todolist
+                filter={el.filter}
+                id={el.id}
+                key={el.id}
+                tasks={allTodolistTasks}
+                title={el.title}
+              />
+            )
+          })}
+        </AnimatePresence>
+      </TodoWrap>
+    </>
   )
 }
 const WrapForUserInfo = styled.div`
