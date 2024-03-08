@@ -25,9 +25,6 @@ const slice = createSlice({
   },
   name: 'auth',
   reducers: {
-    // setIsLogin: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-    //   state.isLogin = action.payload.isLoggedIn
-    // },
     setUserName: (state, action: PayloadAction<{ name: string }>) => {
       state.userName = action.payload.name
     },
