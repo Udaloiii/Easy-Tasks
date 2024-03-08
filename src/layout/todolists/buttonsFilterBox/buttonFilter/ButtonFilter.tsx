@@ -37,7 +37,6 @@ const StyleButton = styled.button<{ active: boolean; title?: FilterValuesType }>
     box-sizing: border-box;
     border: ${props => (props.active ? '2px solid royalblue' : '2px solid #000000')};
     border-radius: 14px;
-    //background: ${props => (props.active ? '#e8e8e8' : '#e8e8e8')};
     background: ${props => (props.active ? ' rgba(23, 23, 23, 0.5)' : '#e8e8e8')};
     color: ${props => (props.active ? 'royalblue' : '#000000')};
     transform: ${props => (props.active ? 'translateY(0)' : 'translateY(-0.3em)')};

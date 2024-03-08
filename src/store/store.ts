@@ -17,6 +17,3 @@ export const store = configureStore({
 export type AppMainType = ReturnType<typeof store.getState>
 export type AppDispatchType = typeof store.dispatch
 export const useAppDispatch = () => useDispatch<AppDispatchType>()
-
-// @ts-ignore
-window.store = store
