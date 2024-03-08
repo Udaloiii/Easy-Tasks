@@ -6,9 +6,9 @@ import { Loader } from '@/components/loader/Loader'
 import { Snackbar } from '@/components/snackbar/Snackbar'
 import { Login } from '@/layout/login/Login'
 import { Page404 } from '@/layout/pageNotFound/Page404'
-import { TodolistsBox } from '@/layout/todolist/TodolistsBox'
+import { TodolistsBox } from '@/layout/todolists/TodolistsBox'
 import { AppStatusType } from '@/store/reducers/app-reducer'
-import { authMeTC } from '@/store/reducers/auth-reducer'
+import { authThunks } from '@/store/reducers/auth-reducer'
 import { AppMainType, useAppDispatch } from '@/store/store'
 import { AnimatePresence } from 'framer-motion'
 
@@ -18,8 +18,8 @@ export function App() {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(authMeTC())
-  }, [dispatch])
+    !isInitialized && dispatch(authThunks.authMe())
+  }, [dispatch, isInitialized])
 
   if (!isInitialized) {
     return (
