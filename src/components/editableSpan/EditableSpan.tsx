@@ -69,6 +69,6 @@ const Wrap = styled.span`
   justify-content: center;
 
   button {
-    padding-top: 7px;
+    align-self: center;
   }
 `

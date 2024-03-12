@@ -79,6 +79,6 @@ const Text = styled.p<{ isDone: boolean }>`
   user-select: ${props => (props.isDone ? 'none' : '')};
 
   button {
-    padding-top: 6px;
+    margin-top: 5px;
   }
 `

@@ -36,7 +36,7 @@ export const CustomButton: FC<ButtonPropsType> = memo(
         transition={{ duration: 0.5 }}
         type={type || 'button'}
       >
-        <Title>{title}</Title>
+        {title && <Title>{title}</Title>}
         <Icon height={heightIcon} iconId={iconId} viewBox={viewBoxForIcon} width={widthIcon} />
       </StyleButton>
     )
@@ -44,17 +44,21 @@ export const CustomButton: FC<ButtonPropsType> = memo(
 )
 
 const StyleButton = styled(motion.button)<{ color?: string }>`
+  width: max-content;
+  height: max-content;
   background-color: transparent;
   border: none;
   outline: none;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+
   color: ${props => props.color || 'white'};
-  cursor: pointer;
   transition: 0.3s;
-  padding: 0;
+  padding: 1px;
   gap: 5px;
+
   svg {
     transition: 0.3s;
   }

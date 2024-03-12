@@ -126,8 +126,11 @@ const Container = styled(motion.div)`
 `
 const Title = styled.h2`
   color: whitesmoke;
-  align-self: center;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+
+  button {
+    margin-top: 7px;
+  }
 `
 
 const WrapRemoveTodoBtn = styled.div`
