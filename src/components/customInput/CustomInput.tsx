@@ -59,6 +59,7 @@ export const CustomInput = memo(
         type === 'password' &&
         (visible ? (
           <CustomButton
+            color={'white'}
             heightIcon={'14px'}
             iconId={'visible'}
             onClick={onChangeVisibility}
@@ -67,6 +68,7 @@ export const CustomInput = memo(
           />
         ) : (
           <CustomButton
+            color={'white'}
             heightIcon={'14px'}
             iconId={'hidden'}
             onClick={onChangeVisibility}
