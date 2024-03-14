@@ -113,6 +113,7 @@ const Wrap = styled.div`
   transition: 0.7s;
   background-color: rgba(24, 24, 24, 0.9);
   display: flex;
+  align-items: center;
   width: 100%;
   max-width: 550px;
   position: relative;
