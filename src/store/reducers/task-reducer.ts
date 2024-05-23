@@ -16,9 +16,6 @@ export type TaskStateType = {
 const slice = createSlice({
   extraReducers: builder => {
     builder
-      // .addCase(authActions.setIsLogin, () => {
-      //   return {}
-      // })
       .addCase(authThunks.logOut.fulfilled, () => {
         return {}
       })
@@ -96,6 +93,8 @@ export const addTask = createAppAsyncThunk<
     if (res.data.resultCode === ResultCode.Success) {
       const task = res.data.data.item
 
+      dispatch(appActions.setAppInfo({ info: 'task added' }))
+
       return { task }
     } else {
       handleServerAppError(res.data, dispatch)
@@ -114,7 +113,7 @@ const updateTask = createAppAsyncThunk<
   const task = state.task[todoId].find(t => t.id === taskId)
 
   if (!task) {
-    dispatch(appActions.setAppError({ error: 'tasks not found' }))
+    dispatch(appActions.setAppError({ error: 'task not found' }))
 
     return rejectWithValue(null)
   }
@@ -133,7 +132,7 @@ const updateTask = createAppAsyncThunk<
     const res = await tasksApi.updateTask(todoId, taskId, apiModel)
 
     if (res.data.resultCode === ResultCode.Success) {
-      dispatch(appActions.setAppInfo({ info: 'tasks is updated' }))
+      dispatch(appActions.setAppInfo({ info: 'task updated' }))
 
       return { task: domainModel, taskId: taskId, todoId: todoId }
     } else {
@@ -154,7 +153,7 @@ const deleteTask = createAppAsyncThunk<
     const res = await tasksApi.deleteTask(todoId, taskId)
 
     if (res.data.resultCode === ResultCode.Success) {
-      dispatch(appActions.setAppInfo({ info: 'tasks is deleted' }))
+      dispatch(appActions.setAppInfo({ info: 'task deleted' }))
 
       return { taskId, todoId }
     } else {
