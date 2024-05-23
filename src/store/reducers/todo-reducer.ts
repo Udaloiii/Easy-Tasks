@@ -15,9 +15,6 @@ export type TodolistType = {
 const slice = createSlice({
   extraReducers: builder => {
     builder
-      // .addCase(authActions.setIsLogin, () => {
-      //   return []
-      // })
       .addCase(authThunks.logOut.fulfilled, () => {
         return []
       })
@@ -65,27 +62,11 @@ export const todoActions = slice.actions
 const setTodo = createAppAsyncThunk<{ todolists: ResponseGetTodosType[] }>(
   'todo/setTodo',
   async (_arg, thunkAPI) => {
-    // const { dispatch, rejectWithValue } = thunkAPI
-
     return thunkTryCatch(thunkAPI, async () => {
       const res = await todosApi.getTodo()
 
       return { todolists: res.data }
     })
-
-    // dispatch(appActions.setAppStatus({ status: 'loading' }))
-
-    // try {
-    //   const res = await todosApi.getTodo()
-    //
-    //   dispatch(appActions.setAppStatus({ status: 'succeeded' }))
-    //
-    //   return { todolists: res.data }
-    // } catch (err) {
-    //   handleServerNetworkError(err, dispatch)
-    //
-    //   return rejectWithValue(null)
-    // }
   }
 )
 const addTodo = createAppAsyncThunk('todo/addTodo', async (title: string, thunkAPI) => {
@@ -95,7 +76,6 @@ const addTodo = createAppAsyncThunk('todo/addTodo', async (title: string, thunkA
     const res = await todosApi.addTodo(title)
 
     if (res.data.resultCode === ResultCode.Success) {
-      // dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       dispatch(appActions.setAppInfo({ info: 'todo is added' }))
 
       return { todo: res.data.data.item }
@@ -113,7 +93,6 @@ const deleteTodo = createAppAsyncThunk('todo/deleteTodo', async (todoId: string,
     const res = await todosApi.deleteTodo(todoId)
 
     if (res.data.resultCode === ResultCode.Success) {
-      // dispatch(appActions.setAppStatus({ status: 'succeeded' }))
       dispatch(appActions.setAppInfo({ info: 'todo is deleted' }))
 
       return { todoId }
@@ -133,7 +112,6 @@ const updateTodoTitle = createAppAsyncThunk(
       const res = await todosApi.changeTodoTitle(todoId, newTitle)
 
       if (res.data.resultCode === ResultCode.Success) {
-        // dispatch(appActions.setAppStatus({ status: 'succeeded' }))
         dispatch(appActions.setAppInfo({ info: 'title is updated' }))
 
         return { newTitle, todoId }

@@ -53,9 +53,6 @@ const slice = createSlice({
     setAppInitialized: (state, action: PayloadAction<{ isInitialized: boolean }>) => {
       state.isInitialized = action.payload.isInitialized
     },
-    // setAppStatus: (state, action: PayloadAction<{ status: AppStatusType }>) => {
-    //   state.status = action.payload.status
-    // },
   },
 })
 
