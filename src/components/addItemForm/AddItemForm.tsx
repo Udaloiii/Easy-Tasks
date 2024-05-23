@@ -57,4 +57,5 @@ const Wrap = styled.div<{ width?: string }>`
   display: flex;
   gap: 20px;
   justify-content: center;
+  align-items: center;
 `
